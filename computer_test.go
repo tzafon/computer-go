@@ -27,6 +27,7 @@ func TestComputerNewWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Computers.New(context.TODO(), computer.ComputerNewParams{
+		AutoKill:  computer.Bool(true),
 		ContextID: computer.String("context_id"),
 		Display: computer.ComputerNewParamsDisplay{
 			Height: computer.Int(0),
@@ -92,7 +93,7 @@ func TestComputerList(t *testing.T) {
 	}
 }
 
-func TestComputerExecuteAction(t *testing.T) {
+func TestComputerExecuteActionWithOptionalParams(t *testing.T) {
 	t.Skip("Prism tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -109,7 +110,32 @@ func TestComputerExecuteAction(t *testing.T) {
 		context.TODO(),
 		"id",
 		computer.ComputerExecuteActionParams{
-			Body: map[string]interface{}{},
+			Action: computer.ComputerExecuteActionParamsAction{
+				AutoDetectEncoding: computer.Bool(true),
+				Base64:             computer.Bool(true),
+				Button:             computer.String("button"),
+				Debug: computer.ComputerExecuteActionParamsActionDebug{
+					Command:         computer.String("command"),
+					MaxOutputLength: computer.Int(0),
+					TimeoutSeconds:  computer.Int(0),
+				},
+				Dx:          computer.Float(0),
+				Dy:          computer.Float(0),
+				Height:      computer.Int(0),
+				Keys:        []string{"string"},
+				Ms:          computer.Int(0),
+				ScaleFactor: computer.Float(0),
+				Text:        computer.String("text"),
+				Type:        computer.String("type"),
+				URL:         computer.String("url"),
+				Width:       computer.Int(0),
+				X:           computer.Float(0),
+				X1:          computer.Float(0),
+				X2:          computer.Float(0),
+				Y:           computer.Float(0),
+				Y1:          computer.Float(0),
+				Y2:          computer.Float(0),
+			},
 		},
 	)
 	if err != nil {
@@ -121,7 +147,7 @@ func TestComputerExecuteAction(t *testing.T) {
 	}
 }
 
-func TestComputerExecuteBatch(t *testing.T) {
+func TestComputerExecuteBatchWithOptionalParams(t *testing.T) {
 	t.Skip("Prism tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -138,7 +164,32 @@ func TestComputerExecuteBatch(t *testing.T) {
 		context.TODO(),
 		"id",
 		computer.ComputerExecuteBatchParams{
-			Body: map[string]interface{}{},
+			Actions: []computer.ComputerExecuteBatchParamsAction{{
+				AutoDetectEncoding: computer.Bool(true),
+				Base64:             computer.Bool(true),
+				Button:             computer.String("button"),
+				Debug: computer.ComputerExecuteBatchParamsActionDebug{
+					Command:         computer.String("command"),
+					MaxOutputLength: computer.Int(0),
+					TimeoutSeconds:  computer.Int(0),
+				},
+				Dx:          computer.Float(0),
+				Dy:          computer.Float(0),
+				Height:      computer.Int(0),
+				Keys:        []string{"string"},
+				Ms:          computer.Int(0),
+				ScaleFactor: computer.Float(0),
+				Text:        computer.String("text"),
+				Type:        computer.String("type"),
+				URL:         computer.String("url"),
+				Width:       computer.Int(0),
+				X:           computer.Float(0),
+				X1:          computer.Float(0),
+				X2:          computer.Float(0),
+				Y:           computer.Float(0),
+				Y1:          computer.Float(0),
+				Y2:          computer.Float(0),
+			}},
 		},
 	)
 	if err != nil {
@@ -173,7 +224,7 @@ func TestComputerKeepAlive(t *testing.T) {
 	}
 }
 
-func TestComputerNavigate(t *testing.T) {
+func TestComputerNavigateWithOptionalParams(t *testing.T) {
 	t.Skip("Prism tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -190,7 +241,7 @@ func TestComputerNavigate(t *testing.T) {
 		context.TODO(),
 		"id",
 		computer.ComputerNavigateParams{
-			Body: map[string]interface{}{},
+			URL: computer.String("url"),
 		},
 	)
 	if err != nil {

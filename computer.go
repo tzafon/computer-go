@@ -4,14 +4,12 @@ package computer
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 	"slices"
 
 	"github.com/stainless-sdks/computer-go/internal/apijson"
-	shimjson "github.com/stainless-sdks/computer-go/internal/encoding/json"
 	"github.com/stainless-sdks/computer-go/internal/requestconfig"
 	"github.com/stainless-sdks/computer-go/option"
 	"github.com/stainless-sdks/computer-go/packages/param"
@@ -67,8 +65,8 @@ func (r *ComputerService) List(ctx context.Context, opts ...option.RequestOption
 	return
 }
 
-// Execute a single action such as screenshot, click, type, navigate, scroll, debug
-// or other computer use actions
+// Execute a single action such as screenshot, click, type, navigate, scroll,
+// debug, set_viewport, get_html_content or other computer use actions
 func (r *ComputerService) ExecuteAction(ctx context.Context, id string, body ComputerExecuteActionParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -196,6 +194,9 @@ type ComputerExecuteBatchResponse map[string]any
 type ComputerKeepAliveResponse map[string]any
 
 type ComputerNewParams struct {
+	// If true (default), kill session after inactivity. If false, only kill on
+	// explicit stop or max_lifetime
+	AutoKill  param.Opt[bool]   `json:"auto_kill,omitzero"`
 	ContextID param.Opt[string] `json:"context_id,omitzero"`
 	// "browser"|"desktop"|"code" etc
 	Kind           param.Opt[string] `json:"kind,omitzero"`
@@ -232,37 +233,148 @@ func (r *ComputerNewParamsDisplay) UnmarshalJSON(data []byte) error {
 }
 
 type ComputerExecuteActionParams struct {
-	Body any
+	Action ComputerExecuteActionParamsAction `json:"action,omitzero"`
 	paramObj
 }
 
 func (r ComputerExecuteActionParams) MarshalJSON() (data []byte, err error) {
-	return shimjson.Marshal(r.Body)
+	type shadow ComputerExecuteActionParams
+	return param.MarshalObject(r, (*shadow)(&r))
 }
 func (r *ComputerExecuteActionParams) UnmarshalJSON(data []byte) error {
-	return json.Unmarshal(data, &r.Body)
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type ComputerExecuteActionParamsAction struct {
+	// For get_html_content
+	AutoDetectEncoding param.Opt[bool] `json:"auto_detect_encoding,omitzero"`
+	// For screenshot
+	Base64 param.Opt[bool]   `json:"base64,omitzero"`
+	Button param.Opt[string] `json:"button,omitzero"`
+	// For scrolling
+	Dx          param.Opt[float64] `json:"dx,omitzero"`
+	Dy          param.Opt[float64] `json:"dy,omitzero"`
+	Height      param.Opt[int64]   `json:"height,omitzero"`
+	Ms          param.Opt[int64]   `json:"ms,omitzero"`
+	ScaleFactor param.Opt[float64] `json:"scale_factor,omitzero"`
+	Text        param.Opt[string]  `json:"text,omitzero"`
+	// click|double_click|right_click|drag|type|keypress|scroll|wait|screenshot|go_to_url|debug|get_html_content|set_viewport
+	Type param.Opt[string] `json:"type,omitzero"`
+	URL  param.Opt[string] `json:"url,omitzero"`
+	// For set_viewport
+	Width param.Opt[int64]   `json:"width,omitzero"`
+	X     param.Opt[float64] `json:"x,omitzero"`
+	// For dragging/scrolling
+	X1 param.Opt[float64] `json:"x1,omitzero"`
+	// For dragging
+	X2    param.Opt[float64]                     `json:"x2,omitzero"`
+	Y     param.Opt[float64]                     `json:"y,omitzero"`
+	Y1    param.Opt[float64]                     `json:"y1,omitzero"`
+	Y2    param.Opt[float64]                     `json:"y2,omitzero"`
+	Debug ComputerExecuteActionParamsActionDebug `json:"debug,omitzero"`
+	Keys  []string                               `json:"keys,omitzero"`
+	paramObj
+}
+
+func (r ComputerExecuteActionParamsAction) MarshalJSON() (data []byte, err error) {
+	type shadow ComputerExecuteActionParamsAction
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *ComputerExecuteActionParamsAction) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type ComputerExecuteActionParamsActionDebug struct {
+	Command         param.Opt[string] `json:"command,omitzero"`
+	MaxOutputLength param.Opt[int64]  `json:"max_output_length,omitzero"`
+	TimeoutSeconds  param.Opt[int64]  `json:"timeout_seconds,omitzero"`
+	paramObj
+}
+
+func (r ComputerExecuteActionParamsActionDebug) MarshalJSON() (data []byte, err error) {
+	type shadow ComputerExecuteActionParamsActionDebug
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *ComputerExecuteActionParamsActionDebug) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
 }
 
 type ComputerExecuteBatchParams struct {
-	Body any
+	Actions []ComputerExecuteBatchParamsAction `json:"actions,omitzero"`
 	paramObj
 }
 
 func (r ComputerExecuteBatchParams) MarshalJSON() (data []byte, err error) {
-	return shimjson.Marshal(r.Body)
+	type shadow ComputerExecuteBatchParams
+	return param.MarshalObject(r, (*shadow)(&r))
 }
 func (r *ComputerExecuteBatchParams) UnmarshalJSON(data []byte) error {
-	return json.Unmarshal(data, &r.Body)
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type ComputerExecuteBatchParamsAction struct {
+	// For get_html_content
+	AutoDetectEncoding param.Opt[bool] `json:"auto_detect_encoding,omitzero"`
+	// For screenshot
+	Base64 param.Opt[bool]   `json:"base64,omitzero"`
+	Button param.Opt[string] `json:"button,omitzero"`
+	// For scrolling
+	Dx          param.Opt[float64] `json:"dx,omitzero"`
+	Dy          param.Opt[float64] `json:"dy,omitzero"`
+	Height      param.Opt[int64]   `json:"height,omitzero"`
+	Ms          param.Opt[int64]   `json:"ms,omitzero"`
+	ScaleFactor param.Opt[float64] `json:"scale_factor,omitzero"`
+	Text        param.Opt[string]  `json:"text,omitzero"`
+	// click|double_click|right_click|drag|type|keypress|scroll|wait|screenshot|go_to_url|debug|get_html_content|set_viewport
+	Type param.Opt[string] `json:"type,omitzero"`
+	URL  param.Opt[string] `json:"url,omitzero"`
+	// For set_viewport
+	Width param.Opt[int64]   `json:"width,omitzero"`
+	X     param.Opt[float64] `json:"x,omitzero"`
+	// For dragging/scrolling
+	X1 param.Opt[float64] `json:"x1,omitzero"`
+	// For dragging
+	X2    param.Opt[float64]                    `json:"x2,omitzero"`
+	Y     param.Opt[float64]                    `json:"y,omitzero"`
+	Y1    param.Opt[float64]                    `json:"y1,omitzero"`
+	Y2    param.Opt[float64]                    `json:"y2,omitzero"`
+	Debug ComputerExecuteBatchParamsActionDebug `json:"debug,omitzero"`
+	Keys  []string                              `json:"keys,omitzero"`
+	paramObj
+}
+
+func (r ComputerExecuteBatchParamsAction) MarshalJSON() (data []byte, err error) {
+	type shadow ComputerExecuteBatchParamsAction
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *ComputerExecuteBatchParamsAction) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type ComputerExecuteBatchParamsActionDebug struct {
+	Command         param.Opt[string] `json:"command,omitzero"`
+	MaxOutputLength param.Opt[int64]  `json:"max_output_length,omitzero"`
+	TimeoutSeconds  param.Opt[int64]  `json:"timeout_seconds,omitzero"`
+	paramObj
+}
+
+func (r ComputerExecuteBatchParamsActionDebug) MarshalJSON() (data []byte, err error) {
+	type shadow ComputerExecuteBatchParamsActionDebug
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *ComputerExecuteBatchParamsActionDebug) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
 }
 
 type ComputerNavigateParams struct {
-	Body any
+	URL param.Opt[string] `json:"url,omitzero"`
 	paramObj
 }
 
 func (r ComputerNavigateParams) MarshalJSON() (data []byte, err error) {
-	return shimjson.Marshal(r.Body)
+	type shadow ComputerNavigateParams
+	return param.MarshalObject(r, (*shadow)(&r))
 }
 func (r *ComputerNavigateParams) UnmarshalJSON(data []byte) error {
-	return json.Unmarshal(data, &r.Body)
+	return apijson.UnmarshalRoot(data, r)
 }
