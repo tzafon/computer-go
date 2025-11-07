@@ -313,26 +313,66 @@ func (r *ComputerService) TypeText(ctx context.Context, id string, body Computer
 }
 
 type ActionResult struct {
-	ErrorMessage string         `json:"error_message"`
-	RequestID    string         `json:"request_id"`
-	Result       map[string]any `json:"result"`
-	Status       string         `json:"status"`
-	Timestamp    string         `json:"timestamp"`
+	ErrorMessage  string                  `json:"error_message"`
+	ExecutedTabID string                  `json:"executed_tab_id"`
+	PageContext   ActionResultPageContext `json:"page_context"`
+	RequestID     string                  `json:"request_id"`
+	Result        map[string]any          `json:"result"`
+	Status        string                  `json:"status"`
+	Timestamp     string                  `json:"timestamp"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ErrorMessage respjson.Field
-		RequestID    respjson.Field
-		Result       respjson.Field
-		Status       respjson.Field
-		Timestamp    respjson.Field
-		ExtraFields  map[string]respjson.Field
-		raw          string
+		ErrorMessage  respjson.Field
+		ExecutedTabID respjson.Field
+		PageContext   respjson.Field
+		RequestID     respjson.Field
+		Result        respjson.Field
+		Status        respjson.Field
+		Timestamp     respjson.Field
+		ExtraFields   map[string]respjson.Field
+		raw           string
 	} `json:"-"`
 }
 
 // Returns the unmodified JSON received from the API
 func (r ActionResult) RawJSON() string { return r.JSON.raw }
 func (r *ActionResult) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type ActionResultPageContext struct {
+	DeviceScaleFactor float64 `json:"device_scale_factor"`
+	IsMainTab         bool    `json:"is_main_tab"`
+	PageHeight        int64   `json:"page_height"`
+	PageWidth         int64   `json:"page_width"`
+	ScrollX           float64 `json:"scroll_x"`
+	ScrollY           float64 `json:"scroll_y"`
+	TabID             string  `json:"tab_id"`
+	Title             string  `json:"title"`
+	URL               string  `json:"url"`
+	ViewportHeight    int64   `json:"viewport_height"`
+	ViewportWidth     int64   `json:"viewport_width"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		DeviceScaleFactor respjson.Field
+		IsMainTab         respjson.Field
+		PageHeight        respjson.Field
+		PageWidth         respjson.Field
+		ScrollX           respjson.Field
+		ScrollY           respjson.Field
+		TabID             respjson.Field
+		Title             respjson.Field
+		URL               respjson.Field
+		ViewportHeight    respjson.Field
+		ViewportWidth     respjson.Field
+		ExtraFields       map[string]respjson.Field
+		raw               string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ActionResultPageContext) RawJSON() string { return r.JSON.raw }
+func (r *ActionResultPageContext) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -500,11 +540,13 @@ type ComputerExecuteActionParamsAction struct {
 	Base64 param.Opt[bool]   `json:"base64,omitzero"`
 	Button param.Opt[string] `json:"button,omitzero"`
 	// For scrolling
-	Dx          param.Opt[float64] `json:"dx,omitzero"`
-	Dy          param.Opt[float64] `json:"dy,omitzero"`
-	Height      param.Opt[int64]   `json:"height,omitzero"`
-	Ms          param.Opt[int64]   `json:"ms,omitzero"`
-	ScaleFactor param.Opt[float64] `json:"scale_factor,omitzero"`
+	Dx     param.Opt[float64] `json:"dx,omitzero"`
+	Dy     param.Opt[float64] `json:"dy,omitzero"`
+	Height param.Opt[int64]   `json:"height,omitzero"`
+	// Include page context in response
+	IncludeContext param.Opt[bool]    `json:"include_context,omitzero"`
+	Ms             param.Opt[int64]   `json:"ms,omitzero"`
+	ScaleFactor    param.Opt[float64] `json:"scale_factor,omitzero"`
 	// For tab management (browser sessions only)
 	TabID param.Opt[string] `json:"tab_id,omitzero"`
 	Text  param.Opt[string] `json:"text,omitzero"`
@@ -569,11 +611,13 @@ type ComputerExecuteBatchParamsAction struct {
 	Base64 param.Opt[bool]   `json:"base64,omitzero"`
 	Button param.Opt[string] `json:"button,omitzero"`
 	// For scrolling
-	Dx          param.Opt[float64] `json:"dx,omitzero"`
-	Dy          param.Opt[float64] `json:"dy,omitzero"`
-	Height      param.Opt[int64]   `json:"height,omitzero"`
-	Ms          param.Opt[int64]   `json:"ms,omitzero"`
-	ScaleFactor param.Opt[float64] `json:"scale_factor,omitzero"`
+	Dx     param.Opt[float64] `json:"dx,omitzero"`
+	Dy     param.Opt[float64] `json:"dy,omitzero"`
+	Height param.Opt[int64]   `json:"height,omitzero"`
+	// Include page context in response
+	IncludeContext param.Opt[bool]    `json:"include_context,omitzero"`
+	Ms             param.Opt[int64]   `json:"ms,omitzero"`
+	ScaleFactor    param.Opt[float64] `json:"scale_factor,omitzero"`
 	// For tab management (browser sessions only)
 	TabID param.Opt[string] `json:"tab_id,omitzero"`
 	Text  param.Opt[string] `json:"text,omitzero"`
