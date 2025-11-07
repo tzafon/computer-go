@@ -111,6 +111,7 @@ func TestComputerCaptureScreenshotWithOptionalParams(t *testing.T) {
 		"id",
 		computer.ComputerCaptureScreenshotParams{
 			Base64: computer.Bool(true),
+			TabID:  computer.String("tab_id"),
 		},
 	)
 	if err != nil {
@@ -139,8 +140,9 @@ func TestComputerClickWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"id",
 		computer.ComputerClickParams{
-			X: computer.Float(0),
-			Y: computer.Float(0),
+			TabID: computer.String("tab_id"),
+			X:     computer.Float(0),
+			Y:     computer.Float(0),
 		},
 	)
 	if err != nil {
@@ -194,6 +196,7 @@ func TestComputerDebugWithOptionalParams(t *testing.T) {
 		computer.ComputerDebugParams{
 			Command:         computer.String("command"),
 			MaxOutputLength: computer.Int(0),
+			TabID:           computer.String("tab_id"),
 			TimeoutSeconds:  computer.Int(0),
 		},
 	)
@@ -223,8 +226,9 @@ func TestComputerDoubleClickWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"id",
 		computer.ComputerDoubleClickParams{
-			X: computer.Float(0),
-			Y: computer.Float(0),
+			TabID: computer.String("tab_id"),
+			X:     computer.Float(0),
+			Y:     computer.Float(0),
 		},
 	)
 	if err != nil {
@@ -253,10 +257,11 @@ func TestComputerDragWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"id",
 		computer.ComputerDragParams{
-			X1: computer.Float(0),
-			X2: computer.Float(0),
-			Y1: computer.Float(0),
-			Y2: computer.Float(0),
+			TabID: computer.String("tab_id"),
+			X1:    computer.Float(0),
+			X2:    computer.Float(0),
+			Y1:    computer.Float(0),
+			Y2:    computer.Float(0),
 		},
 	)
 	if err != nil {
@@ -396,6 +401,7 @@ func TestComputerGetHTMLWithOptionalParams(t *testing.T) {
 		"id",
 		computer.ComputerGetHTMLParams{
 			AutoDetectEncoding: computer.Bool(true),
+			TabID:              computer.String("tab_id"),
 		},
 	)
 	if err != nil {
@@ -447,7 +453,8 @@ func TestComputerNavigateWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"id",
 		computer.ComputerNavigateParams{
-			URL: computer.String("url"),
+			TabID: computer.String("tab_id"),
+			URL:   computer.String("url"),
 		},
 	)
 	if err != nil {
@@ -476,7 +483,8 @@ func TestComputerPressHotkeyWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"id",
 		computer.ComputerPressHotkeyParams{
-			Keys: []string{"string"},
+			Keys:  []string{"string"},
+			TabID: computer.String("tab_id"),
 		},
 	)
 	if err != nil {
@@ -505,8 +513,9 @@ func TestComputerRightClickWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"id",
 		computer.ComputerRightClickParams{
-			X: computer.Float(0),
-			Y: computer.Float(0),
+			TabID: computer.String("tab_id"),
+			X:     computer.Float(0),
+			Y:     computer.Float(0),
 		},
 	)
 	if err != nil {
@@ -535,10 +544,11 @@ func TestComputerScrollViewportWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"id",
 		computer.ComputerScrollViewportParams{
-			Dx: computer.Float(0),
-			Dy: computer.Float(0),
-			X:  computer.Float(0),
-			Y:  computer.Float(0),
+			Dx:    computer.Float(0),
+			Dy:    computer.Float(0),
+			TabID: computer.String("tab_id"),
+			X:     computer.Float(0),
+			Y:     computer.Float(0),
 		},
 	)
 	if err != nil {
@@ -569,6 +579,7 @@ func TestComputerSetViewportWithOptionalParams(t *testing.T) {
 		computer.ComputerSetViewportParams{
 			Height:      computer.Int(0),
 			ScaleFactor: computer.Float(0),
+			TabID:       computer.String("tab_id"),
 			Width:       computer.Int(0),
 		},
 	)
@@ -667,7 +678,8 @@ func TestComputerTypeTextWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"id",
 		computer.ComputerTypeTextParams{
-			Text: computer.String("text"),
+			TabID: computer.String("tab_id"),
+			Text:  computer.String("text"),
 		},
 	)
 	if err != nil {
