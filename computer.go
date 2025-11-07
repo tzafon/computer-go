@@ -65,7 +65,8 @@ func (r *ComputerService) List(ctx context.Context, opts ...option.RequestOption
 	return
 }
 
-// Take a screenshot of the current browser viewport, optionally as base64
+// Take a screenshot of the current browser viewport, optionally as base64.
+// Optionally specify tab_id to screenshot a specific tab (browser sessions only)
 func (r *ComputerService) CaptureScreenshot(ctx context.Context, id string, body ComputerCaptureScreenshotParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -77,7 +78,8 @@ func (r *ComputerService) CaptureScreenshot(ctx context.Context, id string, body
 	return
 }
 
-// Perform a left mouse click at the specified x,y coordinates
+// Perform a left mouse click at the specified x,y coordinates. Optionally specify
+// tab_id to click on a specific tab (browser sessions only)
 func (r *ComputerService) Click(ctx context.Context, id string, body ComputerClickParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -102,7 +104,8 @@ func (r *ComputerService) ConnectWebsocket(ctx context.Context, id string, opts 
 	return
 }
 
-// Execute a shell command with optional timeout and output length limits
+// Execute a shell command with optional timeout and output length limits.
+// Optionally specify tab_id (browser sessions only)
 func (r *ComputerService) Debug(ctx context.Context, id string, body ComputerDebugParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -114,7 +117,8 @@ func (r *ComputerService) Debug(ctx context.Context, id string, body ComputerDeb
 	return
 }
 
-// Perform a double mouse click at the specified x,y coordinates
+// Perform a double mouse click at the specified x,y coordinates. Optionally
+// specify tab_id to double-click on a specific tab (browser sessions only)
 func (r *ComputerService) DoubleClick(ctx context.Context, id string, body ComputerDoubleClickParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -126,7 +130,8 @@ func (r *ComputerService) DoubleClick(ctx context.Context, id string, body Compu
 	return
 }
 
-// Perform a click-and-drag action from (x1,y1) to (x2,y2)
+// Perform a click-and-drag action from (x1,y1) to (x2,y2). Optionally specify
+// tab_id to drag on a specific tab (browser sessions only)
 func (r *ComputerService) Drag(ctx context.Context, id string, body ComputerDragParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -163,7 +168,8 @@ func (r *ComputerService) ExecuteBatch(ctx context.Context, id string, body Comp
 	return
 }
 
-// Get the HTML content of the current browser page
+// Get the HTML content of the current browser page. Optionally specify tab_id to
+// get HTML from a specific tab (browser sessions only)
 func (r *ComputerService) GetHTML(ctx context.Context, id string, body ComputerGetHTMLParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -187,7 +193,8 @@ func (r *ComputerService) KeepAlive(ctx context.Context, id string, opts ...opti
 	return
 }
 
-// Navigate the browser to a specified URL
+// Navigate the browser to a specified URL. Optionally specify tab_id to navigate a
+// specific tab (browser sessions only)
 func (r *ComputerService) Navigate(ctx context.Context, id string, body ComputerNavigateParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -199,7 +206,8 @@ func (r *ComputerService) Navigate(ctx context.Context, id string, body Computer
 	return
 }
 
-// Press a combination of keys (e.g., ["Control", "c"] for copy)
+// Press a combination of keys (e.g., ["Control", "c"] for copy). Optionally
+// specify tab_id to send hotkey to a specific tab (browser sessions only)
 func (r *ComputerService) PressHotkey(ctx context.Context, id string, body ComputerPressHotkeyParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -211,7 +219,8 @@ func (r *ComputerService) PressHotkey(ctx context.Context, id string, body Compu
 	return
 }
 
-// Perform a right mouse click at the specified x,y coordinates
+// Perform a right mouse click at the specified x,y coordinates. Optionally specify
+// tab_id to right-click on a specific tab (browser sessions only)
 func (r *ComputerService) RightClick(ctx context.Context, id string, body ComputerRightClickParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -223,7 +232,8 @@ func (r *ComputerService) RightClick(ctx context.Context, id string, body Comput
 	return
 }
 
-// Scroll the browser viewport by the specified delta
+// Scroll the browser viewport by the specified delta. Optionally specify tab_id to
+// scroll a specific tab (browser sessions only)
 func (r *ComputerService) ScrollViewport(ctx context.Context, id string, body ComputerScrollViewportParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -235,7 +245,8 @@ func (r *ComputerService) ScrollViewport(ctx context.Context, id string, body Co
 	return
 }
 
-// Change the browser viewport dimensions and scale factor
+// Change the browser viewport dimensions and scale factor. Optionally specify
+// tab_id to set viewport for a specific tab (browser sessions only)
 func (r *ComputerService) SetViewport(ctx context.Context, id string, body ComputerSetViewportParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -288,7 +299,8 @@ func (r *ComputerService) Terminate(ctx context.Context, id string, opts ...opti
 	return
 }
 
-// Type text into the currently focused element in the browser
+// Type text into the currently focused element in the browser. Optionally specify
+// tab_id to type on a specific tab (browser sessions only)
 func (r *ComputerService) TypeText(ctx context.Context, id string, body ComputerTypeTextParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -392,7 +404,8 @@ func (r *ComputerNewParamsDisplay) UnmarshalJSON(data []byte) error {
 }
 
 type ComputerCaptureScreenshotParams struct {
-	Base64 param.Opt[bool] `json:"base64,omitzero"`
+	Base64 param.Opt[bool]   `json:"base64,omitzero"`
+	TabID  param.Opt[string] `json:"tab_id,omitzero"`
 	paramObj
 }
 
@@ -405,8 +418,9 @@ func (r *ComputerCaptureScreenshotParams) UnmarshalJSON(data []byte) error {
 }
 
 type ComputerClickParams struct {
-	X param.Opt[float64] `json:"x,omitzero"`
-	Y param.Opt[float64] `json:"y,omitzero"`
+	TabID param.Opt[string]  `json:"tab_id,omitzero"`
+	X     param.Opt[float64] `json:"x,omitzero"`
+	Y     param.Opt[float64] `json:"y,omitzero"`
 	paramObj
 }
 
@@ -421,6 +435,7 @@ func (r *ComputerClickParams) UnmarshalJSON(data []byte) error {
 type ComputerDebugParams struct {
 	Command         param.Opt[string] `json:"command,omitzero"`
 	MaxOutputLength param.Opt[int64]  `json:"max_output_length,omitzero"`
+	TabID           param.Opt[string] `json:"tab_id,omitzero"`
 	TimeoutSeconds  param.Opt[int64]  `json:"timeout_seconds,omitzero"`
 	paramObj
 }
@@ -434,8 +449,9 @@ func (r *ComputerDebugParams) UnmarshalJSON(data []byte) error {
 }
 
 type ComputerDoubleClickParams struct {
-	X param.Opt[float64] `json:"x,omitzero"`
-	Y param.Opt[float64] `json:"y,omitzero"`
+	TabID param.Opt[string]  `json:"tab_id,omitzero"`
+	X     param.Opt[float64] `json:"x,omitzero"`
+	Y     param.Opt[float64] `json:"y,omitzero"`
 	paramObj
 }
 
@@ -448,10 +464,11 @@ func (r *ComputerDoubleClickParams) UnmarshalJSON(data []byte) error {
 }
 
 type ComputerDragParams struct {
-	X1 param.Opt[float64] `json:"x1,omitzero"`
-	X2 param.Opt[float64] `json:"x2,omitzero"`
-	Y1 param.Opt[float64] `json:"y1,omitzero"`
-	Y2 param.Opt[float64] `json:"y2,omitzero"`
+	TabID param.Opt[string]  `json:"tab_id,omitzero"`
+	X1    param.Opt[float64] `json:"x1,omitzero"`
+	X2    param.Opt[float64] `json:"x2,omitzero"`
+	Y1    param.Opt[float64] `json:"y1,omitzero"`
+	Y2    param.Opt[float64] `json:"y2,omitzero"`
 	paramObj
 }
 
@@ -602,7 +619,8 @@ func (r *ComputerExecuteBatchParamsActionDebug) UnmarshalJSON(data []byte) error
 }
 
 type ComputerGetHTMLParams struct {
-	AutoDetectEncoding param.Opt[bool] `json:"auto_detect_encoding,omitzero"`
+	AutoDetectEncoding param.Opt[bool]   `json:"auto_detect_encoding,omitzero"`
+	TabID              param.Opt[string] `json:"tab_id,omitzero"`
 	paramObj
 }
 
@@ -615,7 +633,8 @@ func (r *ComputerGetHTMLParams) UnmarshalJSON(data []byte) error {
 }
 
 type ComputerNavigateParams struct {
-	URL param.Opt[string] `json:"url,omitzero"`
+	TabID param.Opt[string] `json:"tab_id,omitzero"`
+	URL   param.Opt[string] `json:"url,omitzero"`
 	paramObj
 }
 
@@ -628,7 +647,8 @@ func (r *ComputerNavigateParams) UnmarshalJSON(data []byte) error {
 }
 
 type ComputerPressHotkeyParams struct {
-	Keys []string `json:"keys,omitzero"`
+	TabID param.Opt[string] `json:"tab_id,omitzero"`
+	Keys  []string          `json:"keys,omitzero"`
 	paramObj
 }
 
@@ -641,8 +661,9 @@ func (r *ComputerPressHotkeyParams) UnmarshalJSON(data []byte) error {
 }
 
 type ComputerRightClickParams struct {
-	X param.Opt[float64] `json:"x,omitzero"`
-	Y param.Opt[float64] `json:"y,omitzero"`
+	TabID param.Opt[string]  `json:"tab_id,omitzero"`
+	X     param.Opt[float64] `json:"x,omitzero"`
+	Y     param.Opt[float64] `json:"y,omitzero"`
 	paramObj
 }
 
@@ -655,10 +676,11 @@ func (r *ComputerRightClickParams) UnmarshalJSON(data []byte) error {
 }
 
 type ComputerScrollViewportParams struct {
-	Dx param.Opt[float64] `json:"dx,omitzero"`
-	Dy param.Opt[float64] `json:"dy,omitzero"`
-	X  param.Opt[float64] `json:"x,omitzero"`
-	Y  param.Opt[float64] `json:"y,omitzero"`
+	Dx    param.Opt[float64] `json:"dx,omitzero"`
+	Dy    param.Opt[float64] `json:"dy,omitzero"`
+	TabID param.Opt[string]  `json:"tab_id,omitzero"`
+	X     param.Opt[float64] `json:"x,omitzero"`
+	Y     param.Opt[float64] `json:"y,omitzero"`
 	paramObj
 }
 
@@ -673,6 +695,7 @@ func (r *ComputerScrollViewportParams) UnmarshalJSON(data []byte) error {
 type ComputerSetViewportParams struct {
 	Height      param.Opt[int64]   `json:"height,omitzero"`
 	ScaleFactor param.Opt[float64] `json:"scale_factor,omitzero"`
+	TabID       param.Opt[string]  `json:"tab_id,omitzero"`
 	Width       param.Opt[int64]   `json:"width,omitzero"`
 	paramObj
 }
@@ -686,7 +709,8 @@ func (r *ComputerSetViewportParams) UnmarshalJSON(data []byte) error {
 }
 
 type ComputerTypeTextParams struct {
-	Text param.Opt[string] `json:"text,omitzero"`
+	TabID param.Opt[string] `json:"tab_id,omitzero"`
+	Text  param.Opt[string] `json:"text,omitzero"`
 	paramObj
 }
 
