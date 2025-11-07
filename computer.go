@@ -488,8 +488,10 @@ type ComputerExecuteActionParamsAction struct {
 	Height      param.Opt[int64]   `json:"height,omitzero"`
 	Ms          param.Opt[int64]   `json:"ms,omitzero"`
 	ScaleFactor param.Opt[float64] `json:"scale_factor,omitzero"`
-	Text        param.Opt[string]  `json:"text,omitzero"`
-	// click|double_click|right_click|drag|type|keypress|scroll|wait|screenshot|go_to_url|debug|get_html_content|set_viewport
+	// For tab management (browser sessions only)
+	TabID param.Opt[string] `json:"tab_id,omitzero"`
+	Text  param.Opt[string] `json:"text,omitzero"`
+	// click|double_click|right_click|drag|type|keypress|scroll|wait|screenshot|go_to_url|debug|get_html_content|set_viewport|list_tabs|new_tab|switch_tab|close_tab
 	Type param.Opt[string] `json:"type,omitzero"`
 	URL  param.Opt[string] `json:"url,omitzero"`
 	// For set_viewport
@@ -555,8 +557,10 @@ type ComputerExecuteBatchParamsAction struct {
 	Height      param.Opt[int64]   `json:"height,omitzero"`
 	Ms          param.Opt[int64]   `json:"ms,omitzero"`
 	ScaleFactor param.Opt[float64] `json:"scale_factor,omitzero"`
-	Text        param.Opt[string]  `json:"text,omitzero"`
-	// click|double_click|right_click|drag|type|keypress|scroll|wait|screenshot|go_to_url|debug|get_html_content|set_viewport
+	// For tab management (browser sessions only)
+	TabID param.Opt[string] `json:"tab_id,omitzero"`
+	Text  param.Opt[string] `json:"text,omitzero"`
+	// click|double_click|right_click|drag|type|keypress|scroll|wait|screenshot|go_to_url|debug|get_html_content|set_viewport|list_tabs|new_tab|switch_tab|close_tab
 	Type param.Opt[string] `json:"type,omitzero"`
 	URL  param.Opt[string] `json:"url,omitzero"`
 	// For set_viewport
