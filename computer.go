@@ -94,7 +94,7 @@ func (r *ComputerService) Click(ctx context.Context, id string, body ComputerCli
 // Establish WebSocket for real-time bidirectional communication
 func (r *ComputerService) ConnectWebsocket(ctx context.Context, id string, opts ...option.RequestOption) (err error) {
 	opts = slices.Concat(r.Options, opts)
-	opts = append([]option.RequestOption{option.WithHeader("Accept", "")}, opts...)
+	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
 	if id == "" {
 		err = errors.New("missing required id parameter")
 		return
@@ -261,7 +261,7 @@ func (r *ComputerService) SetViewport(ctx context.Context, id string, body Compu
 // Stream real-time events using Server-Sent Events (SSE)
 func (r *ComputerService) StreamEvents(ctx context.Context, id string, opts ...option.RequestOption) (err error) {
 	opts = slices.Concat(r.Options, opts)
-	opts = append([]option.RequestOption{option.WithHeader("Accept", "")}, opts...)
+	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
 	if id == "" {
 		err = errors.New("missing required id parameter")
 		return
@@ -275,7 +275,7 @@ func (r *ComputerService) StreamEvents(ctx context.Context, id string, opts ...o
 // (SSE) for live browser viewing
 func (r *ComputerService) StreamScreencast(ctx context.Context, id string, opts ...option.RequestOption) (err error) {
 	opts = slices.Concat(r.Options, opts)
-	opts = append([]option.RequestOption{option.WithHeader("Accept", "")}, opts...)
+	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
 	if id == "" {
 		err = errors.New("missing required id parameter")
 		return
@@ -289,7 +289,7 @@ func (r *ComputerService) StreamScreencast(ctx context.Context, id string, opts 
 // metrics
 func (r *ComputerService) Terminate(ctx context.Context, id string, opts ...option.RequestOption) (err error) {
 	opts = slices.Concat(r.Options, opts)
-	opts = append([]option.RequestOption{option.WithHeader("Accept", "")}, opts...)
+	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
 	if id == "" {
 		err = errors.New("missing required id parameter")
 		return
