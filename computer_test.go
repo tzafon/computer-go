@@ -35,7 +35,7 @@ func TestComputerNewWithOptionalParams(t *testing.T) {
 			Width:  computer.Int(0),
 		},
 		Kind:           computer.String("kind"),
-		Stealth:        map[string]interface{}{},
+		Stealth:        map[string]any{},
 		TimeoutSeconds: computer.Int(0),
 	})
 	if err != nil {
