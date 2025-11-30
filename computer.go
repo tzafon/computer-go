@@ -544,13 +544,15 @@ type ComputerExecuteActionParamsAction struct {
 	Dy     param.Opt[float64] `json:"dy,omitzero"`
 	Height param.Opt[int64]   `json:"height,omitzero"`
 	// Include page context in response
-	IncludeContext param.Opt[bool]    `json:"include_context,omitzero"`
-	Ms             param.Opt[int64]   `json:"ms,omitzero"`
-	ScaleFactor    param.Opt[float64] `json:"scale_factor,omitzero"`
+	IncludeContext param.Opt[bool] `json:"include_context,omitzero"`
+	// For key_down/key_up
+	Key         param.Opt[string]  `json:"key,omitzero"`
+	Ms          param.Opt[int64]   `json:"ms,omitzero"`
+	ScaleFactor param.Opt[float64] `json:"scale_factor,omitzero"`
 	// For tab management (browser sessions only)
 	TabID param.Opt[string] `json:"tab_id,omitzero"`
 	Text  param.Opt[string] `json:"text,omitzero"`
-	// click|double_click|right_click|drag|type|keypress|scroll|wait|screenshot|go_to_url|debug|get_html_content|set_viewport|list_tabs|new_tab|switch_tab|close_tab
+	// click|double_click|right_click|drag|type|keypress|scroll|wait|screenshot|go_to_url|debug|get_html_content|set_viewport|list_tabs|new_tab|switch_tab|close_tab|key_down|key_up|mouse_down|mouse_up
 	Type param.Opt[string] `json:"type,omitzero"`
 	URL  param.Opt[string] `json:"url,omitzero"`
 	// For set_viewport
@@ -615,13 +617,15 @@ type ComputerExecuteBatchParamsAction struct {
 	Dy     param.Opt[float64] `json:"dy,omitzero"`
 	Height param.Opt[int64]   `json:"height,omitzero"`
 	// Include page context in response
-	IncludeContext param.Opt[bool]    `json:"include_context,omitzero"`
-	Ms             param.Opt[int64]   `json:"ms,omitzero"`
-	ScaleFactor    param.Opt[float64] `json:"scale_factor,omitzero"`
+	IncludeContext param.Opt[bool] `json:"include_context,omitzero"`
+	// For key_down/key_up
+	Key         param.Opt[string]  `json:"key,omitzero"`
+	Ms          param.Opt[int64]   `json:"ms,omitzero"`
+	ScaleFactor param.Opt[float64] `json:"scale_factor,omitzero"`
 	// For tab management (browser sessions only)
 	TabID param.Opt[string] `json:"tab_id,omitzero"`
 	Text  param.Opt[string] `json:"text,omitzero"`
-	// click|double_click|right_click|drag|type|keypress|scroll|wait|screenshot|go_to_url|debug|get_html_content|set_viewport|list_tabs|new_tab|switch_tab|close_tab
+	// click|double_click|right_click|drag|type|keypress|scroll|wait|screenshot|go_to_url|debug|get_html_content|set_viewport|list_tabs|new_tab|switch_tab|close_tab|key_down|key_up|mouse_down|mouse_up
 	Type param.Opt[string] `json:"type,omitzero"`
 	URL  param.Opt[string] `json:"url,omitzero"`
 	// For set_viewport
