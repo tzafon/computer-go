@@ -440,6 +440,128 @@ func TestComputerKeepAlive(t *testing.T) {
 	}
 }
 
+func TestComputerKeyDownWithOptionalParams(t *testing.T) {
+	t.Skip("Prism tests are disabled")
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := computer.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
+	)
+	_, err := client.Computers.KeyDown(
+		context.TODO(),
+		"id",
+		computer.ComputerKeyDownParams{
+			Key:   computer.String("key"),
+			TabID: computer.String("tab_id"),
+		},
+	)
+	if err != nil {
+		var apierr *computer.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
+func TestComputerKeyUpWithOptionalParams(t *testing.T) {
+	t.Skip("Prism tests are disabled")
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := computer.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
+	)
+	_, err := client.Computers.KeyUp(
+		context.TODO(),
+		"id",
+		computer.ComputerKeyUpParams{
+			Key:   computer.String("key"),
+			TabID: computer.String("tab_id"),
+		},
+	)
+	if err != nil {
+		var apierr *computer.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
+func TestComputerMouseDownWithOptionalParams(t *testing.T) {
+	t.Skip("Prism tests are disabled")
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := computer.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
+	)
+	_, err := client.Computers.MouseDown(
+		context.TODO(),
+		"id",
+		computer.ComputerMouseDownParams{
+			TabID: computer.String("tab_id"),
+			X:     computer.Float(0),
+			Y:     computer.Float(0),
+		},
+	)
+	if err != nil {
+		var apierr *computer.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
+func TestComputerMouseUpWithOptionalParams(t *testing.T) {
+	t.Skip("Prism tests are disabled")
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := computer.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
+	)
+	_, err := client.Computers.MouseUp(
+		context.TODO(),
+		"id",
+		computer.ComputerMouseUpParams{
+			TabID: computer.String("tab_id"),
+			X:     computer.Float(0),
+			Y:     computer.Float(0),
+		},
+	)
+	if err != nil {
+		var apierr *computer.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
 func TestComputerNavigateWithOptionalParams(t *testing.T) {
 	t.Skip("Prism tests are disabled")
 	baseURL := "http://localhost:4010"

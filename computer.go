@@ -24,6 +24,7 @@ import (
 // the [NewComputerService] method instead.
 type ComputerService struct {
 	Options []option.RequestOption
+	Tabs    ComputerTabService
 }
 
 // NewComputerService generates a new service that applies the given options to
@@ -32,6 +33,7 @@ type ComputerService struct {
 func NewComputerService(opts ...option.RequestOption) (r ComputerService) {
 	r = ComputerService{}
 	r.Options = opts
+	r.Tabs = NewComputerTabService(opts...)
 	return
 }
 
@@ -190,6 +192,59 @@ func (r *ComputerService) KeepAlive(ctx context.Context, id string, opts ...opti
 	}
 	path := fmt.Sprintf("computers/%s/keepalive", id)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, nil, &res, opts...)
+	return
+}
+
+// Press and hold a keyboard key. Use with key_up for complex interactions like
+// shift-click selection. Optionally specify tab_id (browser sessions only)
+func (r *ComputerService) KeyDown(ctx context.Context, id string, body ComputerKeyDownParams, opts ...option.RequestOption) (res *ActionResult, err error) {
+	opts = slices.Concat(r.Options, opts)
+	if id == "" {
+		err = errors.New("missing required id parameter")
+		return
+	}
+	path := fmt.Sprintf("computers/%s/key-down", id)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
+	return
+}
+
+// Release a keyboard key that was previously pressed with key_down. Optionally
+// specify tab_id (browser sessions only)
+func (r *ComputerService) KeyUp(ctx context.Context, id string, body ComputerKeyUpParams, opts ...option.RequestOption) (res *ActionResult, err error) {
+	opts = slices.Concat(r.Options, opts)
+	if id == "" {
+		err = errors.New("missing required id parameter")
+		return
+	}
+	path := fmt.Sprintf("computers/%s/key-up", id)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
+	return
+}
+
+// Press and hold the left mouse button at the specified coordinates. Use with
+// mouse_up for fine-grained drag control. Optionally specify tab_id (browser
+// sessions only)
+func (r *ComputerService) MouseDown(ctx context.Context, id string, body ComputerMouseDownParams, opts ...option.RequestOption) (res *ActionResult, err error) {
+	opts = slices.Concat(r.Options, opts)
+	if id == "" {
+		err = errors.New("missing required id parameter")
+		return
+	}
+	path := fmt.Sprintf("computers/%s/mouse-down", id)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
+	return
+}
+
+// Release the left mouse button at the specified coordinates. Optionally specify
+// tab_id (browser sessions only)
+func (r *ComputerService) MouseUp(ctx context.Context, id string, body ComputerMouseUpParams, opts ...option.RequestOption) (res *ActionResult, err error) {
+	opts = slices.Concat(r.Options, opts)
+	if id == "" {
+		err = errors.New("missing required id parameter")
+		return
+	}
+	path := fmt.Sprintf("computers/%s/mouse-up", id)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
 	return
 }
 
@@ -677,6 +732,64 @@ func (r ComputerGetHTMLParams) MarshalJSON() (data []byte, err error) {
 	return param.MarshalObject(r, (*shadow)(&r))
 }
 func (r *ComputerGetHTMLParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type ComputerKeyDownParams struct {
+	Key   param.Opt[string] `json:"key,omitzero"`
+	TabID param.Opt[string] `json:"tab_id,omitzero"`
+	paramObj
+}
+
+func (r ComputerKeyDownParams) MarshalJSON() (data []byte, err error) {
+	type shadow ComputerKeyDownParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *ComputerKeyDownParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type ComputerKeyUpParams struct {
+	Key   param.Opt[string] `json:"key,omitzero"`
+	TabID param.Opt[string] `json:"tab_id,omitzero"`
+	paramObj
+}
+
+func (r ComputerKeyUpParams) MarshalJSON() (data []byte, err error) {
+	type shadow ComputerKeyUpParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *ComputerKeyUpParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type ComputerMouseDownParams struct {
+	TabID param.Opt[string]  `json:"tab_id,omitzero"`
+	X     param.Opt[float64] `json:"x,omitzero"`
+	Y     param.Opt[float64] `json:"y,omitzero"`
+	paramObj
+}
+
+func (r ComputerMouseDownParams) MarshalJSON() (data []byte, err error) {
+	type shadow ComputerMouseDownParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *ComputerMouseDownParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type ComputerMouseUpParams struct {
+	TabID param.Opt[string]  `json:"tab_id,omitzero"`
+	X     param.Opt[float64] `json:"x,omitzero"`
+	Y     param.Opt[float64] `json:"y,omitzero"`
+	paramObj
+}
+
+func (r ComputerMouseUpParams) MarshalJSON() (data []byte, err error) {
+	type shadow ComputerMouseUpParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *ComputerMouseUpParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
