@@ -603,6 +603,7 @@ type ComputerExecuteActionParamsAction struct {
 	// For key_down/key_up
 	Key         param.Opt[string]  `json:"key,omitzero"`
 	Ms          param.Opt[int64]   `json:"ms,omitzero"`
+	ProxyURL    param.Opt[string]  `json:"proxy_url,omitzero"`
 	ScaleFactor param.Opt[float64] `json:"scale_factor,omitzero"`
 	// For tab management (browser sessions only)
 	TabID param.Opt[string] `json:"tab_id,omitzero"`
@@ -676,6 +677,7 @@ type ComputerExecuteBatchParamsAction struct {
 	// For key_down/key_up
 	Key         param.Opt[string]  `json:"key,omitzero"`
 	Ms          param.Opt[int64]   `json:"ms,omitzero"`
+	ProxyURL    param.Opt[string]  `json:"proxy_url,omitzero"`
 	ScaleFactor param.Opt[float64] `json:"scale_factor,omitzero"`
 	// For tab management (browser sessions only)
 	TabID param.Opt[string] `json:"tab_id,omitzero"`
