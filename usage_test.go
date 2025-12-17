@@ -24,6 +24,7 @@ func TestUsage(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
+	t.Skip("Prism tests are disabled")
 	computerResponse, err := client.Computers.New(context.TODO(), computer.ComputerNewParams{
 		Kind: computer.String("browser"),
 	})
