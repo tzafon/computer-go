@@ -25,11 +25,11 @@ func TestUsage(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	t.Skip("Prism tests are disabled")
-	computerResponse, err := client.Computers.New(context.TODO(), computer.ComputerNewParams{
+	computer, err := client.Computers.New(context.TODO(), computer.ComputerNewParams{
 		Kind: computer.String("browser"),
 	})
 	if err != nil {
 		t.Fatalf("err should be nil: %s", err.Error())
 	}
-	t.Logf("%+v\n", computerResponse.ID)
+	t.Logf("%+v\n", computer.ID)
 }
