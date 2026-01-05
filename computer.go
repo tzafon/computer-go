@@ -37,9 +37,8 @@ func NewComputerService(opts ...option.RequestOption) (r ComputerService) {
 	return
 }
 
-// Create a new browser or desktop automation session with configurable timeout.
-// Returns endpoints for executing actions, streaming events, and viewing
-// screencast.
+// Create a new automation session. Set kind to "browser" for web automation or
+// "desktop" for OS-level automation. Defaults to "browser" if not specified.
 func (r *ComputerService) New(ctx context.Context, body ComputerNewParams, opts ...option.RequestOption) (res *ComputerNewResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	path := "computers"
@@ -80,8 +79,10 @@ func (r *ComputerService) CaptureScreenshot(ctx context.Context, id string, body
 	return
 }
 
-// Perform a left mouse click at the specified x,y coordinates. Optionally specify
-// tab_id (browser sessions only)
+// Perform a left mouse click at the specified x,y coordinates. Coordinates are
+// screenshot pixel positions - send exactly what you see in the
+// screenshot/screencast image. If target is at pixel (500, 300) in the image, send
+// x=500, y=300. Optionally specify tab_id (browser sessions only)
 func (r *ComputerService) Click(ctx context.Context, id string, body ComputerClickParams, opts ...option.RequestOption) (res *ComputerClickResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -119,8 +120,8 @@ func (r *ComputerService) Debug(ctx context.Context, id string, body ComputerDeb
 	return
 }
 
-// Perform a double mouse click at the specified x,y coordinates. Optionally
-// specify tab_id (browser sessions only)
+// Perform a double mouse click at the specified x,y coordinates. Coordinates are
+// screenshot pixel positions. Optionally specify tab_id (browser sessions only)
 func (r *ComputerService) DoubleClick(ctx context.Context, id string, body ComputerDoubleClickParams, opts ...option.RequestOption) (res *ComputerDoubleClickResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -132,8 +133,8 @@ func (r *ComputerService) DoubleClick(ctx context.Context, id string, body Compu
 	return
 }
 
-// Perform a click-and-drag action from (x1,y1) to (x2,y2). Optionally specify
-// tab_id (browser sessions only)
+// Perform a click-and-drag action from (x1,y1) to (x2,y2). Coordinates are
+// screenshot pixel positions. Optionally specify tab_id (browser sessions only)
 func (r *ComputerService) Drag(ctx context.Context, id string, body ComputerDragParams, opts ...option.RequestOption) (res *ComputerDragResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -221,8 +222,9 @@ func (r *ComputerService) KeyUp(ctx context.Context, id string, body ComputerKey
 	return
 }
 
-// Press and hold the left mouse button at the specified coordinates. Optionally
-// specify tab_id (browser sessions only)
+// Press and hold the left mouse button at the specified x,y coordinates.
+// Coordinates are screenshot pixel positions. Optionally specify tab_id (browser
+// sessions only)
 func (r *ComputerService) MouseDown(ctx context.Context, id string, body ComputerMouseDownParams, opts ...option.RequestOption) (res *ComputerMouseDownResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -234,8 +236,8 @@ func (r *ComputerService) MouseDown(ctx context.Context, id string, body Compute
 	return
 }
 
-// Release the left mouse button at the specified coordinates. Optionally specify
-// tab_id (browser sessions only)
+// Release the left mouse button at the specified x,y coordinates. Coordinates are
+// screenshot pixel positions. Optionally specify tab_id (browser sessions only)
 func (r *ComputerService) MouseUp(ctx context.Context, id string, body ComputerMouseUpParams, opts ...option.RequestOption) (res *ComputerMouseUpResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -273,8 +275,8 @@ func (r *ComputerService) PressHotkey(ctx context.Context, id string, body Compu
 	return
 }
 
-// Perform a right mouse click at the specified x,y coordinates. Optionally specify
-// tab_id (browser sessions only)
+// Perform a right mouse click at the specified x,y coordinates. Coordinates are
+// screenshot pixel positions. Optionally specify tab_id (browser sessions only)
 func (r *ComputerService) RightClick(ctx context.Context, id string, body ComputerRightClickParams, opts ...option.RequestOption) (res *ComputerRightClickResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -286,8 +288,8 @@ func (r *ComputerService) RightClick(ctx context.Context, id string, body Comput
 	return
 }
 
-// Scroll the browser viewport by the specified delta. Optionally specify tab_id
-// (browser sessions only)
+// Scroll at the specified x,y position by delta dx,dy. Coordinates are screenshot
+// pixel positions. Optionally specify tab_id (browser sessions only)
 func (r *ComputerService) ScrollViewport(ctx context.Context, id string, body ComputerScrollViewportParams, opts ...option.RequestOption) (res *ComputerScrollViewportResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -370,15 +372,15 @@ type ComputerNewResponse struct {
 	ID        string            `json:"id"`
 	CreatedAt string            `json:"created_at"`
 	Endpoints map[string]string `json:"endpoints"`
+	Kind      string            `json:"kind"`
 	Status    string            `json:"status"`
-	Type      string            `json:"type"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID          respjson.Field
 		CreatedAt   respjson.Field
 		Endpoints   respjson.Field
+		Kind        respjson.Field
 		Status      respjson.Field
-		Type        respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -394,15 +396,15 @@ type ComputerGetResponse struct {
 	ID        string            `json:"id"`
 	CreatedAt string            `json:"created_at"`
 	Endpoints map[string]string `json:"endpoints"`
+	Kind      string            `json:"kind"`
 	Status    string            `json:"status"`
-	Type      string            `json:"type"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID          respjson.Field
 		CreatedAt   respjson.Field
 		Endpoints   respjson.Field
+		Kind        respjson.Field
 		Status      respjson.Field
-		Type        respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -418,15 +420,15 @@ type ComputerListResponse struct {
 	ID        string            `json:"id"`
 	CreatedAt string            `json:"created_at"`
 	Endpoints map[string]string `json:"endpoints"`
+	Kind      string            `json:"kind"`
 	Status    string            `json:"status"`
-	Type      string            `json:"type"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
 		ID          respjson.Field
 		CreatedAt   respjson.Field
 		Endpoints   respjson.Field
+		Kind        respjson.Field
 		Status      respjson.Field
-		Type        respjson.Field
 		ExtraFields map[string]respjson.Field
 		raw         string
 	} `json:"-"`
@@ -1534,7 +1536,7 @@ type ComputerNewParams struct {
 	// If true (default), kill session after inactivity
 	AutoKill  param.Opt[bool]   `json:"auto_kill,omitzero"`
 	ContextID param.Opt[string] `json:"context_id,omitzero"`
-	// "browser"|"desktop"|"code" etc
+	// "browser" (default) or "desktop"
 	Kind           param.Opt[string]        `json:"kind,omitzero"`
 	TimeoutSeconds param.Opt[int64]         `json:"timeout_seconds,omitzero"`
 	Display        ComputerNewParamsDisplay `json:"display,omitzero"`
