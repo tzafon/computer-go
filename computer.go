@@ -108,7 +108,8 @@ func (r *ComputerService) ConnectWebsocket(ctx context.Context, id string, opts 
 }
 
 // Execute a shell command with optional timeout and output length limits.
-// Optionally specify tab_id (browser sessions only)
+// Optionally specify tab_id (browser sessions only). Deprecated: use /exec or
+// /exec/sync instead.
 func (r *ComputerService) Debug(ctx context.Context, id string, body ComputerDebugParams, opts ...option.RequestOption) (res *ComputerDebugResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -1670,9 +1671,12 @@ type ComputerExecuteActionParamsAction struct {
 	// Include page context in response
 	IncludeContext param.Opt[bool] `json:"include_context,omitzero"`
 	// For key_down/key_up
-	Key         param.Opt[string]  `json:"key,omitzero"`
-	Ms          param.Opt[int64]   `json:"ms,omitzero"`
-	ProxyURL    param.Opt[string]  `json:"proxy_url,omitzero"`
+	Key      param.Opt[string] `json:"key,omitzero"`
+	Ms       param.Opt[int64]  `json:"ms,omitzero"`
+	ProxyURL param.Opt[string] `json:"proxy_url,omitzero"`
+	// RequestId is used for correlating streaming output to the originating request.
+	// Set on ActionRequest, not individual action types.
+	RequestID   param.Opt[string]  `json:"request_id,omitzero"`
 	ScaleFactor param.Opt[float64] `json:"scale_factor,omitzero"`
 	// For tab management (browser sessions only)
 	TabID param.Opt[string] `json:"tab_id,omitzero"`
@@ -1705,8 +1709,12 @@ func (r *ComputerExecuteActionParamsAction) UnmarshalJSON(data []byte) error {
 
 type ComputerExecuteActionParamsActionDebug struct {
 	Command         param.Opt[string] `json:"command,omitzero"`
+	Cwd             param.Opt[string] `json:"cwd,omitzero"`
 	MaxOutputLength param.Opt[int64]  `json:"max_output_length,omitzero"`
+	RequestID       param.Opt[string] `json:"request_id,omitzero"`
+	Stream          param.Opt[bool]   `json:"stream,omitzero"`
 	TimeoutSeconds  param.Opt[int64]  `json:"timeout_seconds,omitzero"`
+	Env             map[string]string `json:"env,omitzero"`
 	paramObj
 }
 
@@ -1744,9 +1752,12 @@ type ComputerExecuteBatchParamsAction struct {
 	// Include page context in response
 	IncludeContext param.Opt[bool] `json:"include_context,omitzero"`
 	// For key_down/key_up
-	Key         param.Opt[string]  `json:"key,omitzero"`
-	Ms          param.Opt[int64]   `json:"ms,omitzero"`
-	ProxyURL    param.Opt[string]  `json:"proxy_url,omitzero"`
+	Key      param.Opt[string] `json:"key,omitzero"`
+	Ms       param.Opt[int64]  `json:"ms,omitzero"`
+	ProxyURL param.Opt[string] `json:"proxy_url,omitzero"`
+	// RequestId is used for correlating streaming output to the originating request.
+	// Set on ActionRequest, not individual action types.
+	RequestID   param.Opt[string]  `json:"request_id,omitzero"`
 	ScaleFactor param.Opt[float64] `json:"scale_factor,omitzero"`
 	// For tab management (browser sessions only)
 	TabID param.Opt[string] `json:"tab_id,omitzero"`
@@ -1779,8 +1790,12 @@ func (r *ComputerExecuteBatchParamsAction) UnmarshalJSON(data []byte) error {
 
 type ComputerExecuteBatchParamsActionDebug struct {
 	Command         param.Opt[string] `json:"command,omitzero"`
+	Cwd             param.Opt[string] `json:"cwd,omitzero"`
 	MaxOutputLength param.Opt[int64]  `json:"max_output_length,omitzero"`
+	RequestID       param.Opt[string] `json:"request_id,omitzero"`
+	Stream          param.Opt[bool]   `json:"stream,omitzero"`
 	TimeoutSeconds  param.Opt[int64]  `json:"timeout_seconds,omitzero"`
+	Env             map[string]string `json:"env,omitzero"`
 	paramObj
 }
 
