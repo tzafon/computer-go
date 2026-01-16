@@ -2,7 +2,7 @@
 
 <!-- x-release-please-start-version -->
 
-<a href="https://pkg.go.dev/github.com/stainless-sdks/computer-go"><img src="https://pkg.go.dev/badge/github.com/stainless-sdks/computer-go.svg" alt="Go Reference"></a>
+<a href="https://pkg.go.dev/github.com/tzafon/computer-go"><img src="https://pkg.go.dev/badge/github.com/tzafon/computer-go.svg" alt="Go Reference"></a>
 
 <!-- x-release-please-end -->
 
@@ -22,17 +22,25 @@ Use the Computer MCP Server to enable AI assistants to interact with this API, a
 
 ## Installation
 
+<!-- x-release-please-start-version -->
+
 ```go
 import (
-	"github.com/stainless-sdks/computer-go" // imported as computer
+	"github.com/tzafon/computer-go" // imported as computer
 )
 ```
 
+<!-- x-release-please-end -->
+
 Or to pin the version:
 
+<!-- x-release-please-start-version -->
+
 ```sh
-go get -u 'github.com/stainless-sdks/computer-go@v0.0.1'
+go get -u 'github.com/tzafon/computer-go@v0.1.0'
 ```
+
+<!-- x-release-please-end -->
 
 ## Requirements
 
@@ -49,21 +57,19 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/stainless-sdks/computer-go"
-	"github.com/stainless-sdks/computer-go/option"
+	"github.com/tzafon/computer-go"
+	"github.com/tzafon/computer-go/option"
 )
 
 func main() {
 	client := computer.NewClient(
 		option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("TZAFON_API_KEY")
 	)
-	computerResponse, err := client.Computers.New(context.TODO(), computer.ComputerNewParams{
-		Kind: computer.String("browser"),
-	})
+	computerResponses, err := client.Computers.List(context.TODO())
 	if err != nil {
 		panic(err.Error())
 	}
-	fmt.Printf("%+v\n", computerResponse.ID)
+	fmt.Printf("%+v\n", computerResponses)
 }
 
 ```
@@ -269,7 +275,7 @@ client := computer.NewClient(
 	option.WithHeader("X-Some-Header", "custom_header_info"),
 )
 
-client.Computers.New(context.TODO(), ...,
+client.Computers.List(context.TODO(), ...,
 	// Override the header
 	option.WithHeader("X-Some-Header", "some_other_custom_header_info"),
 	// Add an undocumented field to the request body, using sjson syntax
@@ -279,7 +285,7 @@ client.Computers.New(context.TODO(), ...,
 
 The request option `option.WithDebugLog(nil)` may be helpful while debugging.
 
-See the [full list of request options](https://pkg.go.dev/github.com/stainless-sdks/computer-go/option).
+See the [full list of request options](https://pkg.go.dev/github.com/tzafon/computer-go/option).
 
 ### Pagination
 
@@ -300,9 +306,7 @@ When the API returns a non-success status code, we return an error with type
 To handle errors, we recommend that you use the `errors.As` pattern:
 
 ```go
-_, err := client.Computers.New(context.TODO(), computer.ComputerNewParams{
-	Kind: computer.String("browser"),
-})
+_, err := client.Computers.List(context.TODO())
 if err != nil {
 	var apierr *computer.Error
 	if errors.As(err, &apierr) {
@@ -327,11 +331,8 @@ To set a per-retry timeout, use `option.WithRequestTimeout()`.
 // This sets the timeout for the request, including all the retries.
 ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 defer cancel()
-client.Computers.New(
+client.Computers.List(
 	ctx,
-	computer.ComputerNewParams{
-		Kind: computer.String("browser"),
-	},
 	// This sets the per-retry timeout
 	option.WithRequestTimeout(20*time.Second),
 )
@@ -365,13 +366,7 @@ client := computer.NewClient(
 )
 
 // Override per-request:
-client.Computers.New(
-	context.TODO(),
-	computer.ComputerNewParams{
-		Kind: computer.String("browser"),
-	},
-	option.WithMaxRetries(5),
-)
+client.Computers.List(context.TODO(), option.WithMaxRetries(5))
 ```
 
 ### Accessing raw response data (e.g. response headers)
@@ -382,17 +377,11 @@ you need to examine response headers, status codes, or other details.
 ```go
 // Create a variable to store the HTTP response
 var response *http.Response
-computerResponse, err := client.Computers.New(
-	context.TODO(),
-	computer.ComputerNewParams{
-		Kind: computer.String("browser"),
-	},
-	option.WithResponseInto(&response),
-)
+computerResponses, err := client.Computers.List(context.TODO(), option.WithResponseInto(&response))
 if err != nil {
 	// handle error
 }
-fmt.Printf("%+v\n", computerResponse)
+fmt.Printf("%+v\n", computerResponses)
 
 fmt.Printf("Status Code: %d\n", response.StatusCode)
 fmt.Printf("Headers: %+#v\n", response.Header)
@@ -493,7 +482,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/computer-go/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/tzafon/computer-go/issues) with questions, bugs, or suggestions.
 
 ## Contributing
 

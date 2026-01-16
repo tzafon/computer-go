@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stainless-sdks/computer-go"
-	"github.com/stainless-sdks/computer-go/internal"
-	"github.com/stainless-sdks/computer-go/option"
+	"github.com/tzafon/computer-go"
+	"github.com/tzafon/computer-go/internal"
+	"github.com/tzafon/computer-go/option"
 )
 
 type closureTransport struct {
@@ -38,9 +38,7 @@ func TestUserAgentHeader(t *testing.T) {
 			},
 		}),
 	)
-	client.Computers.New(context.Background(), computer.ComputerNewParams{
-		Kind: computer.String("browser"),
-	})
+	client.Computers.List(context.Background())
 	if userAgent != fmt.Sprintf("Computer/Go %s", internal.PackageVersion) {
 		t.Errorf("Expected User-Agent to be correct, but got: %#v", userAgent)
 	}
@@ -64,9 +62,7 @@ func TestRetryAfter(t *testing.T) {
 			},
 		}),
 	)
-	_, err := client.Computers.New(context.Background(), computer.ComputerNewParams{
-		Kind: computer.String("browser"),
-	})
+	_, err := client.Computers.List(context.Background())
 	if err == nil {
 		t.Error("Expected there to be a cancel error")
 	}
@@ -101,9 +97,7 @@ func TestDeleteRetryCountHeader(t *testing.T) {
 		}),
 		option.WithHeaderDel("X-Stainless-Retry-Count"),
 	)
-	_, err := client.Computers.New(context.Background(), computer.ComputerNewParams{
-		Kind: computer.String("browser"),
-	})
+	_, err := client.Computers.List(context.Background())
 	if err == nil {
 		t.Error("Expected there to be a cancel error")
 	}
@@ -133,9 +127,7 @@ func TestOverwriteRetryCountHeader(t *testing.T) {
 		}),
 		option.WithHeader("X-Stainless-Retry-Count", "42"),
 	)
-	_, err := client.Computers.New(context.Background(), computer.ComputerNewParams{
-		Kind: computer.String("browser"),
-	})
+	_, err := client.Computers.List(context.Background())
 	if err == nil {
 		t.Error("Expected there to be a cancel error")
 	}
@@ -164,9 +156,7 @@ func TestRetryAfterMs(t *testing.T) {
 			},
 		}),
 	)
-	_, err := client.Computers.New(context.Background(), computer.ComputerNewParams{
-		Kind: computer.String("browser"),
-	})
+	_, err := client.Computers.List(context.Background())
 	if err == nil {
 		t.Error("Expected there to be a cancel error")
 	}
@@ -189,9 +179,7 @@ func TestContextCancel(t *testing.T) {
 	)
 	cancelCtx, cancel := context.WithCancel(context.Background())
 	cancel()
-	_, err := client.Computers.New(cancelCtx, computer.ComputerNewParams{
-		Kind: computer.String("browser"),
-	})
+	_, err := client.Computers.List(cancelCtx)
 	if err == nil {
 		t.Error("Expected there to be a cancel error")
 	}
@@ -211,9 +199,7 @@ func TestContextCancelDelay(t *testing.T) {
 	)
 	cancelCtx, cancel := context.WithTimeout(context.Background(), 2*time.Millisecond)
 	defer cancel()
-	_, err := client.Computers.New(cancelCtx, computer.ComputerNewParams{
-		Kind: computer.String("browser"),
-	})
+	_, err := client.Computers.List(cancelCtx)
 	if err == nil {
 		t.Error("expected there to be a cancel error")
 	}
@@ -239,9 +225,7 @@ func TestContextDeadline(t *testing.T) {
 				},
 			}),
 		)
-		_, err := client.Computers.New(deadlineCtx, computer.ComputerNewParams{
-			Kind: computer.String("browser"),
-		})
+		_, err := client.Computers.List(deadlineCtx)
 		if err == nil {
 			t.Error("expected there to be a deadline error")
 		}

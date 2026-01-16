@@ -2,7 +2,7 @@ package apijson
 
 import (
 	"errors"
-	"github.com/stainless-sdks/computer-go/packages/param"
+	"github.com/tzafon/computer-go/packages/param"
 	"reflect"
 
 	"github.com/tidwall/gjson"

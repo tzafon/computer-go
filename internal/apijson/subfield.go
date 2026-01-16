@@ -1,7 +1,7 @@
 package apijson
 
 import (
-	"github.com/stainless-sdks/computer-go/packages/respjson"
+	"github.com/tzafon/computer-go/packages/respjson"
 	"reflect"
 )
 

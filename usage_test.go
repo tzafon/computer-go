@@ -7,9 +7,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stainless-sdks/computer-go"
-	"github.com/stainless-sdks/computer-go/internal/testutil"
-	"github.com/stainless-sdks/computer-go/option"
+	"github.com/tzafon/computer-go"
+	"github.com/tzafon/computer-go/internal/testutil"
+	"github.com/tzafon/computer-go/option"
 )
 
 func TestUsage(t *testing.T) {
@@ -25,11 +25,9 @@ func TestUsage(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	t.Skip("Prism tests are disabled")
-	computerResponse, err := client.Computers.New(context.TODO(), computer.ComputerNewParams{
-		Kind: computer.String("browser"),
-	})
+	computerResponses, err := client.Computers.List(context.TODO())
 	if err != nil {
 		t.Fatalf("err should be nil: %s", err.Error())
 	}
-	t.Logf("%+v\n", computerResponse.ID)
+	t.Logf("%+v\n", computerResponses)
 }

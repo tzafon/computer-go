@@ -11,15 +11,15 @@ import (
 	"strings"
 	"time"
 
-	"github.com/stainless-sdks/computer-go/internal/requestconfig"
 	"github.com/tidwall/sjson"
+	"github.com/tzafon/computer-go/internal/requestconfig"
 )
 
 // RequestOption is an option for the requests made by the computer API Client
 // which can be supplied to clients, services, and methods. You can read more about this functional
 // options pattern in our [README].
 //
-// [README]: https://pkg.go.dev/github.com/stainless-sdks/computer-go#readme-requestoptions
+// [README]: https://pkg.go.dev/github.com/tzafon/computer-go#readme-requestoptions
 type RequestOption = requestconfig.RequestOption
 
 // WithBaseURL returns a RequestOption that sets the BaseURL for the client.

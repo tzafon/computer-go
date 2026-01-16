@@ -2,7 +2,7 @@ package param_test
 
 import (
 	"encoding/json"
-	"github.com/stainless-sdks/computer-go/packages/param"
+	"github.com/tzafon/computer-go/packages/param"
 	"testing"
 )
 
