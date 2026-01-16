@@ -2,7 +2,7 @@ package apiform
 
 import (
 	"bytes"
-	"github.com/stainless-sdks/computer-go/packages/param"
+	"github.com/tzafon/computer-go/packages/param"
 	"io"
 	"mime/multipart"
 	"strings"

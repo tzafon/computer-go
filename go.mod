@@ -1,4 +1,4 @@
-module github.com/stainless-sdks/computer-go
+module github.com/tzafon/computer-go
 
 go 1.22
 

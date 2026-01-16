@@ -18,10 +18,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/stainless-sdks/computer-go/internal"
-	"github.com/stainless-sdks/computer-go/internal/apierror"
-	"github.com/stainless-sdks/computer-go/internal/apiform"
-	"github.com/stainless-sdks/computer-go/internal/apiquery"
+	"github.com/tzafon/computer-go/internal"
+	"github.com/tzafon/computer-go/internal/apierror"
+	"github.com/tzafon/computer-go/internal/apiform"
+	"github.com/tzafon/computer-go/internal/apiquery"
 )
 
 func getDefaultHeaders() map[string]string {

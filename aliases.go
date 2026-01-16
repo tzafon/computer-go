@@ -3,8 +3,8 @@
 package computer
 
 import (
-	"github.com/stainless-sdks/computer-go/internal/apierror"
-	"github.com/stainless-sdks/computer-go/packages/param"
+	"github.com/tzafon/computer-go/internal/apierror"
+	"github.com/tzafon/computer-go/packages/param"
 )
 
 // aliased to make [param.APIUnion] private when embedding

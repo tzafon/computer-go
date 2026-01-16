@@ -9,11 +9,11 @@ import (
 	"net/http"
 	"slices"
 
-	"github.com/stainless-sdks/computer-go/internal/apijson"
-	"github.com/stainless-sdks/computer-go/internal/requestconfig"
-	"github.com/stainless-sdks/computer-go/option"
-	"github.com/stainless-sdks/computer-go/packages/param"
-	"github.com/stainless-sdks/computer-go/packages/respjson"
+	"github.com/tzafon/computer-go/internal/apijson"
+	"github.com/tzafon/computer-go/internal/requestconfig"
+	"github.com/tzafon/computer-go/option"
+	"github.com/tzafon/computer-go/packages/param"
+	"github.com/tzafon/computer-go/packages/respjson"
 )
 
 // ComputerService contains methods and other services that help with interacting

@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stainless-sdks/computer-go"
-	"github.com/stainless-sdks/computer-go/internal"
-	"github.com/stainless-sdks/computer-go/option"
+	"github.com/tzafon/computer-go"
+	"github.com/tzafon/computer-go/internal"
+	"github.com/tzafon/computer-go/option"
 )
 
 type closureTransport struct {
