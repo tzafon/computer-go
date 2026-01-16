@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0 (2026-01-16)
+
+Full Changelog: [v0.1.1...v0.2.0](https://github.com/tzafon/computer-go/compare/v0.1.1...v0.2.0)
+
+### Features
+
+* **api:** manual updates ([d5bf04f](https://github.com/tzafon/computer-go/commit/d5bf04f3fa4d8a6ec5b16f0d776200cdbff5dfb4))
+
 ## 0.1.1 (2026-01-16)
 
 Full Changelog: [v0.1.0...v0.1.1](https://github.com/tzafon/computer-go/compare/v0.1.0...v0.1.1)

@@ -1,4 +1,4 @@
-package computer
+package githubcomtzafoncomputergo
 
 import (
 	"github.com/tzafon/computer-go/packages/param"
