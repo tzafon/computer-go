@@ -48,13 +48,13 @@ func main() {
 	client := computer.NewClient(
 		option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("TZAFON_API_KEY")
 	)
-	computer, err := client.Computers.New(context.TODO(), computer.ComputerNewParams{
+	computerResponse, err := client.Computers.New(context.TODO(), computer.ComputerNewParams{
 		Kind: computer.String("browser"),
 	})
 	if err != nil {
 		panic(err.Error())
 	}
-	fmt.Printf("%+v\n", computer.ID)
+	fmt.Printf("%+v\n", computerResponse.ID)
 }
 
 ```
@@ -373,7 +373,7 @@ you need to examine response headers, status codes, or other details.
 ```go
 // Create a variable to store the HTTP response
 var response *http.Response
-computer, err := client.Computers.New(
+computerResponse, err := client.Computers.New(
 	context.TODO(),
 	computer.ComputerNewParams{
 		Kind: computer.String("browser"),
@@ -383,7 +383,7 @@ computer, err := client.Computers.New(
 if err != nil {
 	// handle error
 }
-fmt.Printf("%+v\n", computer)
+fmt.Printf("%+v\n", computerResponse)
 
 fmt.Printf("Status Code: %d\n", response.StatusCode)
 fmt.Printf("Headers: %+#v\n", response.Header)

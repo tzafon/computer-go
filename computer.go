@@ -25,6 +25,7 @@ import (
 type ComputerService struct {
 	Options []option.RequestOption
 	Tabs    ComputerTabService
+	Exec    ComputerExecService
 }
 
 // NewComputerService generates a new service that applies the given options to
@@ -34,6 +35,7 @@ func NewComputerService(opts ...option.RequestOption) (r ComputerService) {
 	r = ComputerService{}
 	r.Options = opts
 	r.Tabs = NewComputerTabService(opts...)
+	r.Exec = NewComputerExecService(opts...)
 	return
 }
 
@@ -42,7 +44,7 @@ func NewComputerService(opts ...option.RequestOption) (r ComputerService) {
 // timeout_seconds controls max lifetime, inactivity_timeout_seconds controls idle
 // timeout, and auto_kill disables only the idle timeout (max lifetime still
 // applies).
-func (r *ComputerService) New(ctx context.Context, body ComputerNewParams, opts ...option.RequestOption) (res *ComputerNewResponse, err error) {
+func (r *ComputerService) New(ctx context.Context, body ComputerNewParams, opts ...option.RequestOption) (res *ComputerResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	path := "computers"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
@@ -50,7 +52,7 @@ func (r *ComputerService) New(ctx context.Context, body ComputerNewParams, opts 
 }
 
 // Get the current status and metadata of a computer instance
-func (r *ComputerService) Get(ctx context.Context, id string, opts ...option.RequestOption) (res *ComputerGetResponse, err error) {
+func (r *ComputerService) Get(ctx context.Context, id string, opts ...option.RequestOption) (res *ComputerResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -62,7 +64,7 @@ func (r *ComputerService) Get(ctx context.Context, id string, opts ...option.Req
 }
 
 // List all active computers for the user's organization
-func (r *ComputerService) List(ctx context.Context, opts ...option.RequestOption) (res *[]ComputerListResponse, err error) {
+func (r *ComputerService) List(ctx context.Context, opts ...option.RequestOption) (res *[]ComputerResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	path := "computers"
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
@@ -71,7 +73,7 @@ func (r *ComputerService) List(ctx context.Context, opts ...option.RequestOption
 
 // Take a screenshot of the current browser viewport, optionally as base64.
 // Optionally specify tab_id (browser sessions only)
-func (r *ComputerService) CaptureScreenshot(ctx context.Context, id string, body ComputerCaptureScreenshotParams, opts ...option.RequestOption) (res *ComputerCaptureScreenshotResponse, err error) {
+func (r *ComputerService) CaptureScreenshot(ctx context.Context, id string, body ComputerCaptureScreenshotParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -82,11 +84,23 @@ func (r *ComputerService) CaptureScreenshot(ctx context.Context, id string, body
 	return
 }
 
+// Change the proxy settings for the browser session
+func (r *ComputerService) ChangeProxy(ctx context.Context, id string, body ComputerChangeProxyParams, opts ...option.RequestOption) (res *ActionResult, err error) {
+	opts = slices.Concat(r.Options, opts)
+	if id == "" {
+		err = errors.New("missing required id parameter")
+		return
+	}
+	path := fmt.Sprintf("computers/%s/change-proxy", id)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, body, &res, opts...)
+	return
+}
+
 // Perform a left mouse click at the specified x,y coordinates. Coordinates are
 // screenshot pixel positions - send exactly what you see in the
 // screenshot/screencast image. If target is at pixel (500, 300) in the image, send
 // x=500, y=300. Optionally specify tab_id (browser sessions only)
-func (r *ComputerService) Click(ctx context.Context, id string, body ComputerClickParams, opts ...option.RequestOption) (res *ComputerClickResponse, err error) {
+func (r *ComputerService) Click(ctx context.Context, id string, body ComputerClickParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -113,7 +127,7 @@ func (r *ComputerService) ConnectWebsocket(ctx context.Context, id string, opts 
 // Execute a shell command with optional timeout and output length limits.
 // Optionally specify tab_id (browser sessions only). Deprecated: use /exec or
 // /exec/sync instead.
-func (r *ComputerService) Debug(ctx context.Context, id string, body ComputerDebugParams, opts ...option.RequestOption) (res *ComputerDebugResponse, err error) {
+func (r *ComputerService) Debug(ctx context.Context, id string, body ComputerDebugParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -126,7 +140,7 @@ func (r *ComputerService) Debug(ctx context.Context, id string, body ComputerDeb
 
 // Perform a double mouse click at the specified x,y coordinates. Coordinates are
 // screenshot pixel positions. Optionally specify tab_id (browser sessions only)
-func (r *ComputerService) DoubleClick(ctx context.Context, id string, body ComputerDoubleClickParams, opts ...option.RequestOption) (res *ComputerDoubleClickResponse, err error) {
+func (r *ComputerService) DoubleClick(ctx context.Context, id string, body ComputerDoubleClickParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -139,7 +153,7 @@ func (r *ComputerService) DoubleClick(ctx context.Context, id string, body Compu
 
 // Perform a click-and-drag action from (x1,y1) to (x2,y2). Coordinates are
 // screenshot pixel positions. Optionally specify tab_id (browser sessions only)
-func (r *ComputerService) Drag(ctx context.Context, id string, body ComputerDragParams, opts ...option.RequestOption) (res *ComputerDragResponse, err error) {
+func (r *ComputerService) Drag(ctx context.Context, id string, body ComputerDragParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -152,7 +166,7 @@ func (r *ComputerService) Drag(ctx context.Context, id string, body ComputerDrag
 
 // Execute a single action such as screenshot, click, type, navigate, scroll,
 // debug, set_viewport, get_html_content or other computer use actions
-func (r *ComputerService) ExecuteAction(ctx context.Context, id string, body ComputerExecuteActionParams, opts ...option.RequestOption) (res *ComputerExecuteActionResponse, err error) {
+func (r *ComputerService) ExecuteAction(ctx context.Context, id string, body ComputerExecuteActionParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -177,7 +191,7 @@ func (r *ComputerService) ExecuteBatch(ctx context.Context, id string, body Comp
 
 // Get the HTML content of the current browser page. Optionally specify tab_id
 // (browser sessions only)
-func (r *ComputerService) GetHTML(ctx context.Context, id string, body ComputerGetHTMLParams, opts ...option.RequestOption) (res *ComputerGetHTMLResponse, err error) {
+func (r *ComputerService) GetHTML(ctx context.Context, id string, body ComputerGetHTMLParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -202,7 +216,7 @@ func (r *ComputerService) KeepAlive(ctx context.Context, id string, opts ...opti
 
 // Press and hold a keyboard key. Use with key_up for complex interactions.
 // Optionally specify tab_id (browser sessions only)
-func (r *ComputerService) KeyDown(ctx context.Context, id string, body ComputerKeyDownParams, opts ...option.RequestOption) (res *ComputerKeyDownResponse, err error) {
+func (r *ComputerService) KeyDown(ctx context.Context, id string, body ComputerKeyDownParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -215,7 +229,7 @@ func (r *ComputerService) KeyDown(ctx context.Context, id string, body ComputerK
 
 // Release a keyboard key that was previously pressed with key_down. Optionally
 // specify tab_id (browser sessions only)
-func (r *ComputerService) KeyUp(ctx context.Context, id string, body ComputerKeyUpParams, opts ...option.RequestOption) (res *ComputerKeyUpResponse, err error) {
+func (r *ComputerService) KeyUp(ctx context.Context, id string, body ComputerKeyUpParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -229,7 +243,7 @@ func (r *ComputerService) KeyUp(ctx context.Context, id string, body ComputerKey
 // Press and hold the left mouse button at the specified x,y coordinates.
 // Coordinates are screenshot pixel positions. Optionally specify tab_id (browser
 // sessions only)
-func (r *ComputerService) MouseDown(ctx context.Context, id string, body ComputerMouseDownParams, opts ...option.RequestOption) (res *ComputerMouseDownResponse, err error) {
+func (r *ComputerService) MouseDown(ctx context.Context, id string, body ComputerMouseDownParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -242,7 +256,7 @@ func (r *ComputerService) MouseDown(ctx context.Context, id string, body Compute
 
 // Release the left mouse button at the specified x,y coordinates. Coordinates are
 // screenshot pixel positions. Optionally specify tab_id (browser sessions only)
-func (r *ComputerService) MouseUp(ctx context.Context, id string, body ComputerMouseUpParams, opts ...option.RequestOption) (res *ComputerMouseUpResponse, err error) {
+func (r *ComputerService) MouseUp(ctx context.Context, id string, body ComputerMouseUpParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -255,7 +269,7 @@ func (r *ComputerService) MouseUp(ctx context.Context, id string, body ComputerM
 
 // Navigate the browser to a specified URL. Optionally specify tab_id to navigate a
 // specific tab (browser sessions only)
-func (r *ComputerService) Navigate(ctx context.Context, id string, body ComputerNavigateParams, opts ...option.RequestOption) (res *ComputerNavigateResponse, err error) {
+func (r *ComputerService) Navigate(ctx context.Context, id string, body ComputerNavigateParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -268,7 +282,7 @@ func (r *ComputerService) Navigate(ctx context.Context, id string, body Computer
 
 // Press a combination of keys (e.g., ["Control", "c"] for copy). Optionally
 // specify tab_id (browser sessions only)
-func (r *ComputerService) PressHotkey(ctx context.Context, id string, body ComputerPressHotkeyParams, opts ...option.RequestOption) (res *ComputerPressHotkeyResponse, err error) {
+func (r *ComputerService) PressHotkey(ctx context.Context, id string, body ComputerPressHotkeyParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -279,9 +293,21 @@ func (r *ComputerService) PressHotkey(ctx context.Context, id string, body Compu
 	return
 }
 
+// Get current TTLs and last activity metadata for a computer session
+func (r *ComputerService) GetStatus(ctx context.Context, id string, opts ...option.RequestOption) (res *ComputerGetStatusResponse, err error) {
+	opts = slices.Concat(r.Options, opts)
+	if id == "" {
+		err = errors.New("missing required id parameter")
+		return
+	}
+	path := fmt.Sprintf("computers/%s/status", id)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
+	return
+}
+
 // Perform a right mouse click at the specified x,y coordinates. Coordinates are
 // screenshot pixel positions. Optionally specify tab_id (browser sessions only)
-func (r *ComputerService) RightClick(ctx context.Context, id string, body ComputerRightClickParams, opts ...option.RequestOption) (res *ComputerRightClickResponse, err error) {
+func (r *ComputerService) RightClick(ctx context.Context, id string, body ComputerRightClickParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -294,7 +320,7 @@ func (r *ComputerService) RightClick(ctx context.Context, id string, body Comput
 
 // Scroll at the specified x,y position by delta dx,dy. Coordinates are screenshot
 // pixel positions. Optionally specify tab_id (browser sessions only)
-func (r *ComputerService) ScrollViewport(ctx context.Context, id string, body ComputerScrollViewportParams, opts ...option.RequestOption) (res *ComputerScrollViewportResponse, err error) {
+func (r *ComputerService) ScrollViewport(ctx context.Context, id string, body ComputerScrollViewportParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -307,7 +333,7 @@ func (r *ComputerService) ScrollViewport(ctx context.Context, id string, body Co
 
 // Change the browser viewport dimensions and scale factor. Optionally specify
 // tab_id (browser sessions only)
-func (r *ComputerService) SetViewport(ctx context.Context, id string, body ComputerSetViewportParams, opts ...option.RequestOption) (res *ComputerSetViewportResponse, err error) {
+func (r *ComputerService) SetViewport(ctx context.Context, id string, body ComputerSetViewportParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -361,7 +387,7 @@ func (r *ComputerService) Terminate(ctx context.Context, id string, opts ...opti
 
 // Type text into the currently focused element in the browser. Optionally specify
 // tab_id (browser sessions only)
-func (r *ComputerService) TypeText(ctx context.Context, id string, body ComputerTypeTextParams, opts ...option.RequestOption) (res *ComputerTypeTextResponse, err error) {
+func (r *ComputerService) TypeText(ctx context.Context, id string, body ComputerTypeTextParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
 		err = errors.New("missing required id parameter")
@@ -372,7 +398,35 @@ func (r *ComputerService) TypeText(ctx context.Context, id string, body Computer
 	return
 }
 
-type ComputerNewResponse struct {
+type ActionResult struct {
+	ErrorMessage  string                              `json:"error_message"`
+	ExecutedTabID string                              `json:"executed_tab_id"`
+	PageContext   V2GoBackendInternalTypesPageContext `json:"page_context"`
+	RequestID     string                              `json:"request_id"`
+	Result        map[string]any                      `json:"result"`
+	Status        string                              `json:"status"`
+	Timestamp     string                              `json:"timestamp"`
+	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
+	JSON struct {
+		ErrorMessage  respjson.Field
+		ExecutedTabID respjson.Field
+		PageContext   respjson.Field
+		RequestID     respjson.Field
+		Result        respjson.Field
+		Status        respjson.Field
+		Timestamp     respjson.Field
+		ExtraFields   map[string]respjson.Field
+		raw           string
+	} `json:"-"`
+}
+
+// Returns the unmodified JSON received from the API
+func (r ActionResult) RawJSON() string { return r.JSON.raw }
+func (r *ActionResult) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type ComputerResponse struct {
 	ID                       string            `json:"id"`
 	AutoKill                 bool              `json:"auto_kill"`
 	CreatedAt                string            `json:"created_at"`
@@ -403,112 +457,12 @@ type ComputerNewResponse struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r ComputerNewResponse) RawJSON() string { return r.JSON.raw }
-func (r *ComputerNewResponse) UnmarshalJSON(data []byte) error {
+func (r ComputerResponse) RawJSON() string { return r.JSON.raw }
+func (r *ComputerResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
-type ComputerGetResponse struct {
-	ID                       string            `json:"id"`
-	AutoKill                 bool              `json:"auto_kill"`
-	CreatedAt                string            `json:"created_at"`
-	Endpoints                map[string]string `json:"endpoints"`
-	ExpiresAt                string            `json:"expires_at"`
-	IdleExpiresAt            string            `json:"idle_expires_at"`
-	InactivityTimeoutSeconds int64             `json:"inactivity_timeout_seconds"`
-	Kind                     string            `json:"kind"`
-	LastActivityAt           string            `json:"last_activity_at"`
-	MaxLifetimeSeconds       int64             `json:"max_lifetime_seconds"`
-	Status                   string            `json:"status"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ID                       respjson.Field
-		AutoKill                 respjson.Field
-		CreatedAt                respjson.Field
-		Endpoints                respjson.Field
-		ExpiresAt                respjson.Field
-		IdleExpiresAt            respjson.Field
-		InactivityTimeoutSeconds respjson.Field
-		Kind                     respjson.Field
-		LastActivityAt           respjson.Field
-		MaxLifetimeSeconds       respjson.Field
-		Status                   respjson.Field
-		ExtraFields              map[string]respjson.Field
-		raw                      string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerGetResponse) RawJSON() string { return r.JSON.raw }
-func (r *ComputerGetResponse) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerListResponse struct {
-	ID                       string            `json:"id"`
-	AutoKill                 bool              `json:"auto_kill"`
-	CreatedAt                string            `json:"created_at"`
-	Endpoints                map[string]string `json:"endpoints"`
-	ExpiresAt                string            `json:"expires_at"`
-	IdleExpiresAt            string            `json:"idle_expires_at"`
-	InactivityTimeoutSeconds int64             `json:"inactivity_timeout_seconds"`
-	Kind                     string            `json:"kind"`
-	LastActivityAt           string            `json:"last_activity_at"`
-	MaxLifetimeSeconds       int64             `json:"max_lifetime_seconds"`
-	Status                   string            `json:"status"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ID                       respjson.Field
-		AutoKill                 respjson.Field
-		CreatedAt                respjson.Field
-		Endpoints                respjson.Field
-		ExpiresAt                respjson.Field
-		IdleExpiresAt            respjson.Field
-		InactivityTimeoutSeconds respjson.Field
-		Kind                     respjson.Field
-		LastActivityAt           respjson.Field
-		MaxLifetimeSeconds       respjson.Field
-		Status                   respjson.Field
-		ExtraFields              map[string]respjson.Field
-		raw                      string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerListResponse) RawJSON() string { return r.JSON.raw }
-func (r *ComputerListResponse) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerCaptureScreenshotResponse struct {
-	ErrorMessage  string                                       `json:"error_message"`
-	ExecutedTabID string                                       `json:"executed_tab_id"`
-	PageContext   ComputerCaptureScreenshotResponsePageContext `json:"page_context"`
-	RequestID     string                                       `json:"request_id"`
-	Result        map[string]any                               `json:"result"`
-	Status        string                                       `json:"status"`
-	Timestamp     string                                       `json:"timestamp"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ErrorMessage  respjson.Field
-		ExecutedTabID respjson.Field
-		PageContext   respjson.Field
-		RequestID     respjson.Field
-		Result        respjson.Field
-		Status        respjson.Field
-		Timestamp     respjson.Field
-		ExtraFields   map[string]respjson.Field
-		raw           string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerCaptureScreenshotResponse) RawJSON() string { return r.JSON.raw }
-func (r *ComputerCaptureScreenshotResponse) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerCaptureScreenshotResponsePageContext struct {
+type V2GoBackendInternalTypesPageContext struct {
 	DeviceScaleFactor float64 `json:"device_scale_factor"`
 	IsMainTab         bool    `json:"is_main_tab"`
 	PageHeight        int64   `json:"page_height"`
@@ -539,1036 +493,44 @@ type ComputerCaptureScreenshotResponsePageContext struct {
 }
 
 // Returns the unmodified JSON received from the API
-func (r ComputerCaptureScreenshotResponsePageContext) RawJSON() string { return r.JSON.raw }
-func (r *ComputerCaptureScreenshotResponsePageContext) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerClickResponse struct {
-	ErrorMessage  string                           `json:"error_message"`
-	ExecutedTabID string                           `json:"executed_tab_id"`
-	PageContext   ComputerClickResponsePageContext `json:"page_context"`
-	RequestID     string                           `json:"request_id"`
-	Result        map[string]any                   `json:"result"`
-	Status        string                           `json:"status"`
-	Timestamp     string                           `json:"timestamp"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ErrorMessage  respjson.Field
-		ExecutedTabID respjson.Field
-		PageContext   respjson.Field
-		RequestID     respjson.Field
-		Result        respjson.Field
-		Status        respjson.Field
-		Timestamp     respjson.Field
-		ExtraFields   map[string]respjson.Field
-		raw           string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerClickResponse) RawJSON() string { return r.JSON.raw }
-func (r *ComputerClickResponse) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerClickResponsePageContext struct {
-	DeviceScaleFactor float64 `json:"device_scale_factor"`
-	IsMainTab         bool    `json:"is_main_tab"`
-	PageHeight        int64   `json:"page_height"`
-	PageWidth         int64   `json:"page_width"`
-	ScrollX           float64 `json:"scroll_x"`
-	ScrollY           float64 `json:"scroll_y"`
-	TabID             string  `json:"tab_id"`
-	Title             string  `json:"title"`
-	URL               string  `json:"url"`
-	ViewportHeight    int64   `json:"viewport_height"`
-	ViewportWidth     int64   `json:"viewport_width"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		DeviceScaleFactor respjson.Field
-		IsMainTab         respjson.Field
-		PageHeight        respjson.Field
-		PageWidth         respjson.Field
-		ScrollX           respjson.Field
-		ScrollY           respjson.Field
-		TabID             respjson.Field
-		Title             respjson.Field
-		URL               respjson.Field
-		ViewportHeight    respjson.Field
-		ViewportWidth     respjson.Field
-		ExtraFields       map[string]respjson.Field
-		raw               string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerClickResponsePageContext) RawJSON() string { return r.JSON.raw }
-func (r *ComputerClickResponsePageContext) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerDebugResponse struct {
-	ErrorMessage  string                           `json:"error_message"`
-	ExecutedTabID string                           `json:"executed_tab_id"`
-	PageContext   ComputerDebugResponsePageContext `json:"page_context"`
-	RequestID     string                           `json:"request_id"`
-	Result        map[string]any                   `json:"result"`
-	Status        string                           `json:"status"`
-	Timestamp     string                           `json:"timestamp"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ErrorMessage  respjson.Field
-		ExecutedTabID respjson.Field
-		PageContext   respjson.Field
-		RequestID     respjson.Field
-		Result        respjson.Field
-		Status        respjson.Field
-		Timestamp     respjson.Field
-		ExtraFields   map[string]respjson.Field
-		raw           string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerDebugResponse) RawJSON() string { return r.JSON.raw }
-func (r *ComputerDebugResponse) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerDebugResponsePageContext struct {
-	DeviceScaleFactor float64 `json:"device_scale_factor"`
-	IsMainTab         bool    `json:"is_main_tab"`
-	PageHeight        int64   `json:"page_height"`
-	PageWidth         int64   `json:"page_width"`
-	ScrollX           float64 `json:"scroll_x"`
-	ScrollY           float64 `json:"scroll_y"`
-	TabID             string  `json:"tab_id"`
-	Title             string  `json:"title"`
-	URL               string  `json:"url"`
-	ViewportHeight    int64   `json:"viewport_height"`
-	ViewportWidth     int64   `json:"viewport_width"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		DeviceScaleFactor respjson.Field
-		IsMainTab         respjson.Field
-		PageHeight        respjson.Field
-		PageWidth         respjson.Field
-		ScrollX           respjson.Field
-		ScrollY           respjson.Field
-		TabID             respjson.Field
-		Title             respjson.Field
-		URL               respjson.Field
-		ViewportHeight    respjson.Field
-		ViewportWidth     respjson.Field
-		ExtraFields       map[string]respjson.Field
-		raw               string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerDebugResponsePageContext) RawJSON() string { return r.JSON.raw }
-func (r *ComputerDebugResponsePageContext) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerDoubleClickResponse struct {
-	ErrorMessage  string                                 `json:"error_message"`
-	ExecutedTabID string                                 `json:"executed_tab_id"`
-	PageContext   ComputerDoubleClickResponsePageContext `json:"page_context"`
-	RequestID     string                                 `json:"request_id"`
-	Result        map[string]any                         `json:"result"`
-	Status        string                                 `json:"status"`
-	Timestamp     string                                 `json:"timestamp"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ErrorMessage  respjson.Field
-		ExecutedTabID respjson.Field
-		PageContext   respjson.Field
-		RequestID     respjson.Field
-		Result        respjson.Field
-		Status        respjson.Field
-		Timestamp     respjson.Field
-		ExtraFields   map[string]respjson.Field
-		raw           string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerDoubleClickResponse) RawJSON() string { return r.JSON.raw }
-func (r *ComputerDoubleClickResponse) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerDoubleClickResponsePageContext struct {
-	DeviceScaleFactor float64 `json:"device_scale_factor"`
-	IsMainTab         bool    `json:"is_main_tab"`
-	PageHeight        int64   `json:"page_height"`
-	PageWidth         int64   `json:"page_width"`
-	ScrollX           float64 `json:"scroll_x"`
-	ScrollY           float64 `json:"scroll_y"`
-	TabID             string  `json:"tab_id"`
-	Title             string  `json:"title"`
-	URL               string  `json:"url"`
-	ViewportHeight    int64   `json:"viewport_height"`
-	ViewportWidth     int64   `json:"viewport_width"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		DeviceScaleFactor respjson.Field
-		IsMainTab         respjson.Field
-		PageHeight        respjson.Field
-		PageWidth         respjson.Field
-		ScrollX           respjson.Field
-		ScrollY           respjson.Field
-		TabID             respjson.Field
-		Title             respjson.Field
-		URL               respjson.Field
-		ViewportHeight    respjson.Field
-		ViewportWidth     respjson.Field
-		ExtraFields       map[string]respjson.Field
-		raw               string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerDoubleClickResponsePageContext) RawJSON() string { return r.JSON.raw }
-func (r *ComputerDoubleClickResponsePageContext) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerDragResponse struct {
-	ErrorMessage  string                          `json:"error_message"`
-	ExecutedTabID string                          `json:"executed_tab_id"`
-	PageContext   ComputerDragResponsePageContext `json:"page_context"`
-	RequestID     string                          `json:"request_id"`
-	Result        map[string]any                  `json:"result"`
-	Status        string                          `json:"status"`
-	Timestamp     string                          `json:"timestamp"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ErrorMessage  respjson.Field
-		ExecutedTabID respjson.Field
-		PageContext   respjson.Field
-		RequestID     respjson.Field
-		Result        respjson.Field
-		Status        respjson.Field
-		Timestamp     respjson.Field
-		ExtraFields   map[string]respjson.Field
-		raw           string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerDragResponse) RawJSON() string { return r.JSON.raw }
-func (r *ComputerDragResponse) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerDragResponsePageContext struct {
-	DeviceScaleFactor float64 `json:"device_scale_factor"`
-	IsMainTab         bool    `json:"is_main_tab"`
-	PageHeight        int64   `json:"page_height"`
-	PageWidth         int64   `json:"page_width"`
-	ScrollX           float64 `json:"scroll_x"`
-	ScrollY           float64 `json:"scroll_y"`
-	TabID             string  `json:"tab_id"`
-	Title             string  `json:"title"`
-	URL               string  `json:"url"`
-	ViewportHeight    int64   `json:"viewport_height"`
-	ViewportWidth     int64   `json:"viewport_width"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		DeviceScaleFactor respjson.Field
-		IsMainTab         respjson.Field
-		PageHeight        respjson.Field
-		PageWidth         respjson.Field
-		ScrollX           respjson.Field
-		ScrollY           respjson.Field
-		TabID             respjson.Field
-		Title             respjson.Field
-		URL               respjson.Field
-		ViewportHeight    respjson.Field
-		ViewportWidth     respjson.Field
-		ExtraFields       map[string]respjson.Field
-		raw               string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerDragResponsePageContext) RawJSON() string { return r.JSON.raw }
-func (r *ComputerDragResponsePageContext) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerExecuteActionResponse struct {
-	ErrorMessage  string                                   `json:"error_message"`
-	ExecutedTabID string                                   `json:"executed_tab_id"`
-	PageContext   ComputerExecuteActionResponsePageContext `json:"page_context"`
-	RequestID     string                                   `json:"request_id"`
-	Result        map[string]any                           `json:"result"`
-	Status        string                                   `json:"status"`
-	Timestamp     string                                   `json:"timestamp"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ErrorMessage  respjson.Field
-		ExecutedTabID respjson.Field
-		PageContext   respjson.Field
-		RequestID     respjson.Field
-		Result        respjson.Field
-		Status        respjson.Field
-		Timestamp     respjson.Field
-		ExtraFields   map[string]respjson.Field
-		raw           string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerExecuteActionResponse) RawJSON() string { return r.JSON.raw }
-func (r *ComputerExecuteActionResponse) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerExecuteActionResponsePageContext struct {
-	DeviceScaleFactor float64 `json:"device_scale_factor"`
-	IsMainTab         bool    `json:"is_main_tab"`
-	PageHeight        int64   `json:"page_height"`
-	PageWidth         int64   `json:"page_width"`
-	ScrollX           float64 `json:"scroll_x"`
-	ScrollY           float64 `json:"scroll_y"`
-	TabID             string  `json:"tab_id"`
-	Title             string  `json:"title"`
-	URL               string  `json:"url"`
-	ViewportHeight    int64   `json:"viewport_height"`
-	ViewportWidth     int64   `json:"viewport_width"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		DeviceScaleFactor respjson.Field
-		IsMainTab         respjson.Field
-		PageHeight        respjson.Field
-		PageWidth         respjson.Field
-		ScrollX           respjson.Field
-		ScrollY           respjson.Field
-		TabID             respjson.Field
-		Title             respjson.Field
-		URL               respjson.Field
-		ViewportHeight    respjson.Field
-		ViewportWidth     respjson.Field
-		ExtraFields       map[string]respjson.Field
-		raw               string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerExecuteActionResponsePageContext) RawJSON() string { return r.JSON.raw }
-func (r *ComputerExecuteActionResponsePageContext) UnmarshalJSON(data []byte) error {
+func (r V2GoBackendInternalTypesPageContext) RawJSON() string { return r.JSON.raw }
+func (r *V2GoBackendInternalTypesPageContext) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
 type ComputerExecuteBatchResponse map[string]any
 
-type ComputerGetHTMLResponse struct {
-	ErrorMessage  string                             `json:"error_message"`
-	ExecutedTabID string                             `json:"executed_tab_id"`
-	PageContext   ComputerGetHTMLResponsePageContext `json:"page_context"`
-	RequestID     string                             `json:"request_id"`
-	Result        map[string]any                     `json:"result"`
-	Status        string                             `json:"status"`
-	Timestamp     string                             `json:"timestamp"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ErrorMessage  respjson.Field
-		ExecutedTabID respjson.Field
-		PageContext   respjson.Field
-		RequestID     respjson.Field
-		Result        respjson.Field
-		Status        respjson.Field
-		Timestamp     respjson.Field
-		ExtraFields   map[string]respjson.Field
-		raw           string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerGetHTMLResponse) RawJSON() string { return r.JSON.raw }
-func (r *ComputerGetHTMLResponse) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerGetHTMLResponsePageContext struct {
-	DeviceScaleFactor float64 `json:"device_scale_factor"`
-	IsMainTab         bool    `json:"is_main_tab"`
-	PageHeight        int64   `json:"page_height"`
-	PageWidth         int64   `json:"page_width"`
-	ScrollX           float64 `json:"scroll_x"`
-	ScrollY           float64 `json:"scroll_y"`
-	TabID             string  `json:"tab_id"`
-	Title             string  `json:"title"`
-	URL               string  `json:"url"`
-	ViewportHeight    int64   `json:"viewport_height"`
-	ViewportWidth     int64   `json:"viewport_width"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		DeviceScaleFactor respjson.Field
-		IsMainTab         respjson.Field
-		PageHeight        respjson.Field
-		PageWidth         respjson.Field
-		ScrollX           respjson.Field
-		ScrollY           respjson.Field
-		TabID             respjson.Field
-		Title             respjson.Field
-		URL               respjson.Field
-		ViewportHeight    respjson.Field
-		ViewportWidth     respjson.Field
-		ExtraFields       map[string]respjson.Field
-		raw               string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerGetHTMLResponsePageContext) RawJSON() string { return r.JSON.raw }
-func (r *ComputerGetHTMLResponsePageContext) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
 type ComputerKeepAliveResponse map[string]any
 
-type ComputerKeyDownResponse struct {
-	ErrorMessage  string                             `json:"error_message"`
-	ExecutedTabID string                             `json:"executed_tab_id"`
-	PageContext   ComputerKeyDownResponsePageContext `json:"page_context"`
-	RequestID     string                             `json:"request_id"`
-	Result        map[string]any                     `json:"result"`
-	Status        string                             `json:"status"`
-	Timestamp     string                             `json:"timestamp"`
+type ComputerGetStatusResponse struct {
+	ID                       string `json:"id"`
+	AutoKill                 bool   `json:"auto_kill"`
+	CreatedAt                string `json:"created_at"`
+	ExpiresAt                string `json:"expires_at"`
+	IdleExpiresAt            string `json:"idle_expires_at"`
+	InactivityTimeoutSeconds int64  `json:"inactivity_timeout_seconds"`
+	LastActivityAt           string `json:"last_activity_at"`
+	MaxLifetimeSeconds       int64  `json:"max_lifetime_seconds"`
+	Status                   string `json:"status"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ErrorMessage  respjson.Field
-		ExecutedTabID respjson.Field
-		PageContext   respjson.Field
-		RequestID     respjson.Field
-		Result        respjson.Field
-		Status        respjson.Field
-		Timestamp     respjson.Field
-		ExtraFields   map[string]respjson.Field
-		raw           string
+		ID                       respjson.Field
+		AutoKill                 respjson.Field
+		CreatedAt                respjson.Field
+		ExpiresAt                respjson.Field
+		IdleExpiresAt            respjson.Field
+		InactivityTimeoutSeconds respjson.Field
+		LastActivityAt           respjson.Field
+		MaxLifetimeSeconds       respjson.Field
+		Status                   respjson.Field
+		ExtraFields              map[string]respjson.Field
+		raw                      string
 	} `json:"-"`
 }
 
 // Returns the unmodified JSON received from the API
-func (r ComputerKeyDownResponse) RawJSON() string { return r.JSON.raw }
-func (r *ComputerKeyDownResponse) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerKeyDownResponsePageContext struct {
-	DeviceScaleFactor float64 `json:"device_scale_factor"`
-	IsMainTab         bool    `json:"is_main_tab"`
-	PageHeight        int64   `json:"page_height"`
-	PageWidth         int64   `json:"page_width"`
-	ScrollX           float64 `json:"scroll_x"`
-	ScrollY           float64 `json:"scroll_y"`
-	TabID             string  `json:"tab_id"`
-	Title             string  `json:"title"`
-	URL               string  `json:"url"`
-	ViewportHeight    int64   `json:"viewport_height"`
-	ViewportWidth     int64   `json:"viewport_width"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		DeviceScaleFactor respjson.Field
-		IsMainTab         respjson.Field
-		PageHeight        respjson.Field
-		PageWidth         respjson.Field
-		ScrollX           respjson.Field
-		ScrollY           respjson.Field
-		TabID             respjson.Field
-		Title             respjson.Field
-		URL               respjson.Field
-		ViewportHeight    respjson.Field
-		ViewportWidth     respjson.Field
-		ExtraFields       map[string]respjson.Field
-		raw               string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerKeyDownResponsePageContext) RawJSON() string { return r.JSON.raw }
-func (r *ComputerKeyDownResponsePageContext) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerKeyUpResponse struct {
-	ErrorMessage  string                           `json:"error_message"`
-	ExecutedTabID string                           `json:"executed_tab_id"`
-	PageContext   ComputerKeyUpResponsePageContext `json:"page_context"`
-	RequestID     string                           `json:"request_id"`
-	Result        map[string]any                   `json:"result"`
-	Status        string                           `json:"status"`
-	Timestamp     string                           `json:"timestamp"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ErrorMessage  respjson.Field
-		ExecutedTabID respjson.Field
-		PageContext   respjson.Field
-		RequestID     respjson.Field
-		Result        respjson.Field
-		Status        respjson.Field
-		Timestamp     respjson.Field
-		ExtraFields   map[string]respjson.Field
-		raw           string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerKeyUpResponse) RawJSON() string { return r.JSON.raw }
-func (r *ComputerKeyUpResponse) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerKeyUpResponsePageContext struct {
-	DeviceScaleFactor float64 `json:"device_scale_factor"`
-	IsMainTab         bool    `json:"is_main_tab"`
-	PageHeight        int64   `json:"page_height"`
-	PageWidth         int64   `json:"page_width"`
-	ScrollX           float64 `json:"scroll_x"`
-	ScrollY           float64 `json:"scroll_y"`
-	TabID             string  `json:"tab_id"`
-	Title             string  `json:"title"`
-	URL               string  `json:"url"`
-	ViewportHeight    int64   `json:"viewport_height"`
-	ViewportWidth     int64   `json:"viewport_width"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		DeviceScaleFactor respjson.Field
-		IsMainTab         respjson.Field
-		PageHeight        respjson.Field
-		PageWidth         respjson.Field
-		ScrollX           respjson.Field
-		ScrollY           respjson.Field
-		TabID             respjson.Field
-		Title             respjson.Field
-		URL               respjson.Field
-		ViewportHeight    respjson.Field
-		ViewportWidth     respjson.Field
-		ExtraFields       map[string]respjson.Field
-		raw               string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerKeyUpResponsePageContext) RawJSON() string { return r.JSON.raw }
-func (r *ComputerKeyUpResponsePageContext) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerMouseDownResponse struct {
-	ErrorMessage  string                               `json:"error_message"`
-	ExecutedTabID string                               `json:"executed_tab_id"`
-	PageContext   ComputerMouseDownResponsePageContext `json:"page_context"`
-	RequestID     string                               `json:"request_id"`
-	Result        map[string]any                       `json:"result"`
-	Status        string                               `json:"status"`
-	Timestamp     string                               `json:"timestamp"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ErrorMessage  respjson.Field
-		ExecutedTabID respjson.Field
-		PageContext   respjson.Field
-		RequestID     respjson.Field
-		Result        respjson.Field
-		Status        respjson.Field
-		Timestamp     respjson.Field
-		ExtraFields   map[string]respjson.Field
-		raw           string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerMouseDownResponse) RawJSON() string { return r.JSON.raw }
-func (r *ComputerMouseDownResponse) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerMouseDownResponsePageContext struct {
-	DeviceScaleFactor float64 `json:"device_scale_factor"`
-	IsMainTab         bool    `json:"is_main_tab"`
-	PageHeight        int64   `json:"page_height"`
-	PageWidth         int64   `json:"page_width"`
-	ScrollX           float64 `json:"scroll_x"`
-	ScrollY           float64 `json:"scroll_y"`
-	TabID             string  `json:"tab_id"`
-	Title             string  `json:"title"`
-	URL               string  `json:"url"`
-	ViewportHeight    int64   `json:"viewport_height"`
-	ViewportWidth     int64   `json:"viewport_width"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		DeviceScaleFactor respjson.Field
-		IsMainTab         respjson.Field
-		PageHeight        respjson.Field
-		PageWidth         respjson.Field
-		ScrollX           respjson.Field
-		ScrollY           respjson.Field
-		TabID             respjson.Field
-		Title             respjson.Field
-		URL               respjson.Field
-		ViewportHeight    respjson.Field
-		ViewportWidth     respjson.Field
-		ExtraFields       map[string]respjson.Field
-		raw               string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerMouseDownResponsePageContext) RawJSON() string { return r.JSON.raw }
-func (r *ComputerMouseDownResponsePageContext) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerMouseUpResponse struct {
-	ErrorMessage  string                             `json:"error_message"`
-	ExecutedTabID string                             `json:"executed_tab_id"`
-	PageContext   ComputerMouseUpResponsePageContext `json:"page_context"`
-	RequestID     string                             `json:"request_id"`
-	Result        map[string]any                     `json:"result"`
-	Status        string                             `json:"status"`
-	Timestamp     string                             `json:"timestamp"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ErrorMessage  respjson.Field
-		ExecutedTabID respjson.Field
-		PageContext   respjson.Field
-		RequestID     respjson.Field
-		Result        respjson.Field
-		Status        respjson.Field
-		Timestamp     respjson.Field
-		ExtraFields   map[string]respjson.Field
-		raw           string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerMouseUpResponse) RawJSON() string { return r.JSON.raw }
-func (r *ComputerMouseUpResponse) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerMouseUpResponsePageContext struct {
-	DeviceScaleFactor float64 `json:"device_scale_factor"`
-	IsMainTab         bool    `json:"is_main_tab"`
-	PageHeight        int64   `json:"page_height"`
-	PageWidth         int64   `json:"page_width"`
-	ScrollX           float64 `json:"scroll_x"`
-	ScrollY           float64 `json:"scroll_y"`
-	TabID             string  `json:"tab_id"`
-	Title             string  `json:"title"`
-	URL               string  `json:"url"`
-	ViewportHeight    int64   `json:"viewport_height"`
-	ViewportWidth     int64   `json:"viewport_width"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		DeviceScaleFactor respjson.Field
-		IsMainTab         respjson.Field
-		PageHeight        respjson.Field
-		PageWidth         respjson.Field
-		ScrollX           respjson.Field
-		ScrollY           respjson.Field
-		TabID             respjson.Field
-		Title             respjson.Field
-		URL               respjson.Field
-		ViewportHeight    respjson.Field
-		ViewportWidth     respjson.Field
-		ExtraFields       map[string]respjson.Field
-		raw               string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerMouseUpResponsePageContext) RawJSON() string { return r.JSON.raw }
-func (r *ComputerMouseUpResponsePageContext) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerNavigateResponse struct {
-	ErrorMessage  string                              `json:"error_message"`
-	ExecutedTabID string                              `json:"executed_tab_id"`
-	PageContext   ComputerNavigateResponsePageContext `json:"page_context"`
-	RequestID     string                              `json:"request_id"`
-	Result        map[string]any                      `json:"result"`
-	Status        string                              `json:"status"`
-	Timestamp     string                              `json:"timestamp"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ErrorMessage  respjson.Field
-		ExecutedTabID respjson.Field
-		PageContext   respjson.Field
-		RequestID     respjson.Field
-		Result        respjson.Field
-		Status        respjson.Field
-		Timestamp     respjson.Field
-		ExtraFields   map[string]respjson.Field
-		raw           string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerNavigateResponse) RawJSON() string { return r.JSON.raw }
-func (r *ComputerNavigateResponse) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerNavigateResponsePageContext struct {
-	DeviceScaleFactor float64 `json:"device_scale_factor"`
-	IsMainTab         bool    `json:"is_main_tab"`
-	PageHeight        int64   `json:"page_height"`
-	PageWidth         int64   `json:"page_width"`
-	ScrollX           float64 `json:"scroll_x"`
-	ScrollY           float64 `json:"scroll_y"`
-	TabID             string  `json:"tab_id"`
-	Title             string  `json:"title"`
-	URL               string  `json:"url"`
-	ViewportHeight    int64   `json:"viewport_height"`
-	ViewportWidth     int64   `json:"viewport_width"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		DeviceScaleFactor respjson.Field
-		IsMainTab         respjson.Field
-		PageHeight        respjson.Field
-		PageWidth         respjson.Field
-		ScrollX           respjson.Field
-		ScrollY           respjson.Field
-		TabID             respjson.Field
-		Title             respjson.Field
-		URL               respjson.Field
-		ViewportHeight    respjson.Field
-		ViewportWidth     respjson.Field
-		ExtraFields       map[string]respjson.Field
-		raw               string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerNavigateResponsePageContext) RawJSON() string { return r.JSON.raw }
-func (r *ComputerNavigateResponsePageContext) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerPressHotkeyResponse struct {
-	ErrorMessage  string                                 `json:"error_message"`
-	ExecutedTabID string                                 `json:"executed_tab_id"`
-	PageContext   ComputerPressHotkeyResponsePageContext `json:"page_context"`
-	RequestID     string                                 `json:"request_id"`
-	Result        map[string]any                         `json:"result"`
-	Status        string                                 `json:"status"`
-	Timestamp     string                                 `json:"timestamp"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ErrorMessage  respjson.Field
-		ExecutedTabID respjson.Field
-		PageContext   respjson.Field
-		RequestID     respjson.Field
-		Result        respjson.Field
-		Status        respjson.Field
-		Timestamp     respjson.Field
-		ExtraFields   map[string]respjson.Field
-		raw           string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerPressHotkeyResponse) RawJSON() string { return r.JSON.raw }
-func (r *ComputerPressHotkeyResponse) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerPressHotkeyResponsePageContext struct {
-	DeviceScaleFactor float64 `json:"device_scale_factor"`
-	IsMainTab         bool    `json:"is_main_tab"`
-	PageHeight        int64   `json:"page_height"`
-	PageWidth         int64   `json:"page_width"`
-	ScrollX           float64 `json:"scroll_x"`
-	ScrollY           float64 `json:"scroll_y"`
-	TabID             string  `json:"tab_id"`
-	Title             string  `json:"title"`
-	URL               string  `json:"url"`
-	ViewportHeight    int64   `json:"viewport_height"`
-	ViewportWidth     int64   `json:"viewport_width"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		DeviceScaleFactor respjson.Field
-		IsMainTab         respjson.Field
-		PageHeight        respjson.Field
-		PageWidth         respjson.Field
-		ScrollX           respjson.Field
-		ScrollY           respjson.Field
-		TabID             respjson.Field
-		Title             respjson.Field
-		URL               respjson.Field
-		ViewportHeight    respjson.Field
-		ViewportWidth     respjson.Field
-		ExtraFields       map[string]respjson.Field
-		raw               string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerPressHotkeyResponsePageContext) RawJSON() string { return r.JSON.raw }
-func (r *ComputerPressHotkeyResponsePageContext) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerRightClickResponse struct {
-	ErrorMessage  string                                `json:"error_message"`
-	ExecutedTabID string                                `json:"executed_tab_id"`
-	PageContext   ComputerRightClickResponsePageContext `json:"page_context"`
-	RequestID     string                                `json:"request_id"`
-	Result        map[string]any                        `json:"result"`
-	Status        string                                `json:"status"`
-	Timestamp     string                                `json:"timestamp"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ErrorMessage  respjson.Field
-		ExecutedTabID respjson.Field
-		PageContext   respjson.Field
-		RequestID     respjson.Field
-		Result        respjson.Field
-		Status        respjson.Field
-		Timestamp     respjson.Field
-		ExtraFields   map[string]respjson.Field
-		raw           string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerRightClickResponse) RawJSON() string { return r.JSON.raw }
-func (r *ComputerRightClickResponse) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerRightClickResponsePageContext struct {
-	DeviceScaleFactor float64 `json:"device_scale_factor"`
-	IsMainTab         bool    `json:"is_main_tab"`
-	PageHeight        int64   `json:"page_height"`
-	PageWidth         int64   `json:"page_width"`
-	ScrollX           float64 `json:"scroll_x"`
-	ScrollY           float64 `json:"scroll_y"`
-	TabID             string  `json:"tab_id"`
-	Title             string  `json:"title"`
-	URL               string  `json:"url"`
-	ViewportHeight    int64   `json:"viewport_height"`
-	ViewportWidth     int64   `json:"viewport_width"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		DeviceScaleFactor respjson.Field
-		IsMainTab         respjson.Field
-		PageHeight        respjson.Field
-		PageWidth         respjson.Field
-		ScrollX           respjson.Field
-		ScrollY           respjson.Field
-		TabID             respjson.Field
-		Title             respjson.Field
-		URL               respjson.Field
-		ViewportHeight    respjson.Field
-		ViewportWidth     respjson.Field
-		ExtraFields       map[string]respjson.Field
-		raw               string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerRightClickResponsePageContext) RawJSON() string { return r.JSON.raw }
-func (r *ComputerRightClickResponsePageContext) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerScrollViewportResponse struct {
-	ErrorMessage  string                                    `json:"error_message"`
-	ExecutedTabID string                                    `json:"executed_tab_id"`
-	PageContext   ComputerScrollViewportResponsePageContext `json:"page_context"`
-	RequestID     string                                    `json:"request_id"`
-	Result        map[string]any                            `json:"result"`
-	Status        string                                    `json:"status"`
-	Timestamp     string                                    `json:"timestamp"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ErrorMessage  respjson.Field
-		ExecutedTabID respjson.Field
-		PageContext   respjson.Field
-		RequestID     respjson.Field
-		Result        respjson.Field
-		Status        respjson.Field
-		Timestamp     respjson.Field
-		ExtraFields   map[string]respjson.Field
-		raw           string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerScrollViewportResponse) RawJSON() string { return r.JSON.raw }
-func (r *ComputerScrollViewportResponse) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerScrollViewportResponsePageContext struct {
-	DeviceScaleFactor float64 `json:"device_scale_factor"`
-	IsMainTab         bool    `json:"is_main_tab"`
-	PageHeight        int64   `json:"page_height"`
-	PageWidth         int64   `json:"page_width"`
-	ScrollX           float64 `json:"scroll_x"`
-	ScrollY           float64 `json:"scroll_y"`
-	TabID             string  `json:"tab_id"`
-	Title             string  `json:"title"`
-	URL               string  `json:"url"`
-	ViewportHeight    int64   `json:"viewport_height"`
-	ViewportWidth     int64   `json:"viewport_width"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		DeviceScaleFactor respjson.Field
-		IsMainTab         respjson.Field
-		PageHeight        respjson.Field
-		PageWidth         respjson.Field
-		ScrollX           respjson.Field
-		ScrollY           respjson.Field
-		TabID             respjson.Field
-		Title             respjson.Field
-		URL               respjson.Field
-		ViewportHeight    respjson.Field
-		ViewportWidth     respjson.Field
-		ExtraFields       map[string]respjson.Field
-		raw               string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerScrollViewportResponsePageContext) RawJSON() string { return r.JSON.raw }
-func (r *ComputerScrollViewportResponsePageContext) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerSetViewportResponse struct {
-	ErrorMessage  string                                 `json:"error_message"`
-	ExecutedTabID string                                 `json:"executed_tab_id"`
-	PageContext   ComputerSetViewportResponsePageContext `json:"page_context"`
-	RequestID     string                                 `json:"request_id"`
-	Result        map[string]any                         `json:"result"`
-	Status        string                                 `json:"status"`
-	Timestamp     string                                 `json:"timestamp"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ErrorMessage  respjson.Field
-		ExecutedTabID respjson.Field
-		PageContext   respjson.Field
-		RequestID     respjson.Field
-		Result        respjson.Field
-		Status        respjson.Field
-		Timestamp     respjson.Field
-		ExtraFields   map[string]respjson.Field
-		raw           string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerSetViewportResponse) RawJSON() string { return r.JSON.raw }
-func (r *ComputerSetViewportResponse) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerSetViewportResponsePageContext struct {
-	DeviceScaleFactor float64 `json:"device_scale_factor"`
-	IsMainTab         bool    `json:"is_main_tab"`
-	PageHeight        int64   `json:"page_height"`
-	PageWidth         int64   `json:"page_width"`
-	ScrollX           float64 `json:"scroll_x"`
-	ScrollY           float64 `json:"scroll_y"`
-	TabID             string  `json:"tab_id"`
-	Title             string  `json:"title"`
-	URL               string  `json:"url"`
-	ViewportHeight    int64   `json:"viewport_height"`
-	ViewportWidth     int64   `json:"viewport_width"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		DeviceScaleFactor respjson.Field
-		IsMainTab         respjson.Field
-		PageHeight        respjson.Field
-		PageWidth         respjson.Field
-		ScrollX           respjson.Field
-		ScrollY           respjson.Field
-		TabID             respjson.Field
-		Title             respjson.Field
-		URL               respjson.Field
-		ViewportHeight    respjson.Field
-		ViewportWidth     respjson.Field
-		ExtraFields       map[string]respjson.Field
-		raw               string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerSetViewportResponsePageContext) RawJSON() string { return r.JSON.raw }
-func (r *ComputerSetViewportResponsePageContext) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerTypeTextResponse struct {
-	ErrorMessage  string                              `json:"error_message"`
-	ExecutedTabID string                              `json:"executed_tab_id"`
-	PageContext   ComputerTypeTextResponsePageContext `json:"page_context"`
-	RequestID     string                              `json:"request_id"`
-	Result        map[string]any                      `json:"result"`
-	Status        string                              `json:"status"`
-	Timestamp     string                              `json:"timestamp"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		ErrorMessage  respjson.Field
-		ExecutedTabID respjson.Field
-		PageContext   respjson.Field
-		RequestID     respjson.Field
-		Result        respjson.Field
-		Status        respjson.Field
-		Timestamp     respjson.Field
-		ExtraFields   map[string]respjson.Field
-		raw           string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerTypeTextResponse) RawJSON() string { return r.JSON.raw }
-func (r *ComputerTypeTextResponse) UnmarshalJSON(data []byte) error {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-type ComputerTypeTextResponsePageContext struct {
-	DeviceScaleFactor float64 `json:"device_scale_factor"`
-	IsMainTab         bool    `json:"is_main_tab"`
-	PageHeight        int64   `json:"page_height"`
-	PageWidth         int64   `json:"page_width"`
-	ScrollX           float64 `json:"scroll_x"`
-	ScrollY           float64 `json:"scroll_y"`
-	TabID             string  `json:"tab_id"`
-	Title             string  `json:"title"`
-	URL               string  `json:"url"`
-	ViewportHeight    int64   `json:"viewport_height"`
-	ViewportWidth     int64   `json:"viewport_width"`
-	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
-	JSON struct {
-		DeviceScaleFactor respjson.Field
-		IsMainTab         respjson.Field
-		PageHeight        respjson.Field
-		PageWidth         respjson.Field
-		ScrollX           respjson.Field
-		ScrollY           respjson.Field
-		TabID             respjson.Field
-		Title             respjson.Field
-		URL               respjson.Field
-		ViewportHeight    respjson.Field
-		ViewportWidth     respjson.Field
-		ExtraFields       map[string]respjson.Field
-		raw               string
-	} `json:"-"`
-}
-
-// Returns the unmodified JSON received from the API
-func (r ComputerTypeTextResponsePageContext) RawJSON() string { return r.JSON.raw }
-func (r *ComputerTypeTextResponsePageContext) UnmarshalJSON(data []byte) error {
+func (r ComputerGetStatusResponse) RawJSON() string { return r.JSON.raw }
+func (r *ComputerGetStatusResponse) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
@@ -1620,6 +582,19 @@ func (r ComputerCaptureScreenshotParams) MarshalJSON() (data []byte, err error) 
 	return param.MarshalObject(r, (*shadow)(&r))
 }
 func (r *ComputerCaptureScreenshotParams) UnmarshalJSON(data []byte) error {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+type ComputerChangeProxyParams struct {
+	ProxyURL param.Opt[string] `json:"proxy_url,omitzero"`
+	paramObj
+}
+
+func (r ComputerChangeProxyParams) MarshalJSON() (data []byte, err error) {
+	type shadow ComputerChangeProxyParams
+	return param.MarshalObject(r, (*shadow)(&r))
+}
+func (r *ComputerChangeProxyParams) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
 
