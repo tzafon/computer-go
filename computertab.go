@@ -35,7 +35,8 @@ func NewComputerTabService(opts ...option.RequestOption) (r ComputerTabService) 
 	return
 }
 
-// Create a new tab, optionally navigating to a URL (browser sessions only)
+// Create a new tab, optionally navigating to a URL. The new tab becomes the main
+// tab (browser sessions only).
 func (r *ComputerTabService) New(ctx context.Context, id string, body ComputerTabNewParams, opts ...option.RequestOption) (res *ComputerTabNewResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -47,8 +48,10 @@ func (r *ComputerTabService) New(ctx context.Context, id string, body ComputerTa
 	return
 }
 
-// Get a list of all open tabs with their IDs, URLs, titles, and main tab status
-// (browser sessions only)
+// Get a list of open tabs with IDs, URLs, titles, and main tab status (browser
+// sessions only). Includes external CDP pages (e.g., Playwright). Excludes
+// devtools:// and chrome:// tabs. Results may be eventually consistent for newly
+// created tabs.
 func (r *ComputerTabService) List(ctx context.Context, id string, opts ...option.RequestOption) (res *ComputerTabListResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -61,7 +64,7 @@ func (r *ComputerTabService) List(ctx context.Context, id string, opts ...option
 }
 
 // Close a specific tab by ID. Cannot close the last remaining tab (browser
-// sessions only)
+// sessions only). Tab IDs come from ListTabs.
 func (r *ComputerTabService) Delete(ctx context.Context, tabID string, body ComputerTabDeleteParams, opts ...option.RequestOption) (res *ComputerTabDeleteResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if body.ID == "" {
@@ -77,7 +80,8 @@ func (r *ComputerTabService) Delete(ctx context.Context, tabID string, body Comp
 	return
 }
 
-// Switch the main/active tab to a different tab by ID (browser sessions only)
+// Switch the main/active tab to a different tab by ID (browser sessions only). Tab
+// IDs come from ListTabs.
 func (r *ComputerTabService) Switch(ctx context.Context, tabID string, body ComputerTabSwitchParams, opts ...option.RequestOption) (res *ComputerTabSwitchResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if body.ID == "" {
