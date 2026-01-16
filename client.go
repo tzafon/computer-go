@@ -18,7 +18,6 @@ import (
 type Client struct {
 	Options   []option.RequestOption
 	Computers ComputerService
-	Agent     AgentService
 }
 
 // DefaultClientOptions read from the environment (TZAFON_API_KEY,
@@ -44,7 +43,6 @@ func NewClient(opts ...option.RequestOption) (r Client) {
 	r = Client{Options: opts}
 
 	r.Computers = NewComputerService(opts...)
-	r.Agent = NewAgentService(opts...)
 
 	return
 }
