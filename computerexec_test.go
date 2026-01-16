@@ -4,6 +4,7 @@ package computer_test
 
 import (
 	"context"
+	"errors"
 	"os"
 	"testing"
 
@@ -12,7 +13,8 @@ import (
 	"github.com/stainless-sdks/computer-go/option"
 )
 
-func TestUsage(t *testing.T) {
+func TestComputerExecExecuteSyncWithOptionalParams(t *testing.T) {
+	t.Skip("Prism tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -24,12 +26,23 @@ func TestUsage(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	t.Skip("Prism tests are disabled")
-	computerResponse, err := client.Computers.New(context.TODO(), computer.ComputerNewParams{
-		Kind: computer.String("browser"),
-	})
+	_, err := client.Computers.Exec.ExecuteSync(
+		context.TODO(),
+		"id",
+		computer.ComputerExecExecuteSyncParams{
+			Command: computer.String("command"),
+			Cwd:     computer.String("cwd"),
+			Env: map[string]string{
+				"foo": "string",
+			},
+			TimeoutSeconds: computer.Int(0),
+		},
+	)
 	if err != nil {
+		var apierr *computer.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
 		t.Fatalf("err should be nil: %s", err.Error())
 	}
-	t.Logf("%+v\n", computerResponse.ID)
 }
