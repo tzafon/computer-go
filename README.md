@@ -26,7 +26,7 @@ Use the Computer MCP Server to enable AI assistants to interact with this API, a
 
 ```go
 import (
-	"github.com/tzafon/computer-go" // imported as computer
+	"github.com/tzafon/computer-go" // imported as githubcomtzafoncomputergo
 )
 ```
 
@@ -62,7 +62,7 @@ import (
 )
 
 func main() {
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("TZAFON_API_KEY")
 	)
 	computerResponses, err := client.Computers.List(context.TODO())
@@ -76,13 +76,13 @@ func main() {
 
 ### Request fields
 
-The computer library uses the [`omitzero`](https://tip.golang.org/doc/go1.24#encodingjsonpkgencodingjson)
+The githubcomtzafoncomputergo library uses the [`omitzero`](https://tip.golang.org/doc/go1.24#encodingjsonpkgencodingjson)
 semantics from the Go 1.24+ `encoding/json` release for request fields.
 
 Required primitive fields (`int64`, `string`, etc.) feature the tag <code>\`json:"...,required"\`</code>. These
 fields are always serialized, even their zero values.
 
-Optional primitive types are wrapped in a `param.Opt[T]`. These fields can be set with the provided constructors, `computer.String(string)`, `computer.Int(int64)`, etc.
+Optional primitive types are wrapped in a `param.Opt[T]`. These fields can be set with the provided constructors, `githubcomtzafoncomputergo.String(string)`, `githubcomtzafoncomputergo.Int(int64)`, etc.
 
 Any `param.Opt[T]`, map, slice, struct or string enum uses the
 tag <code>\`json:"...,omitzero"\`</code>. Its zero value is considered omitted.
@@ -90,17 +90,17 @@ tag <code>\`json:"...,omitzero"\`</code>. Its zero value is considered omitted.
 The `param.IsOmitted(any)` function can confirm the presence of any `omitzero` field.
 
 ```go
-p := computer.ExampleParams{
-	ID:   "id_xxx",               // required property
-	Name: computer.String("..."), // optional property
+p := githubcomtzafoncomputergo.ExampleParams{
+	ID:   "id_xxx",                                // required property
+	Name: githubcomtzafoncomputergo.String("..."), // optional property
 
-	Point: computer.Point{
-		X: 0,               // required field will serialize as 0
-		Y: computer.Int(1), // optional field will serialize as 1
+	Point: githubcomtzafoncomputergo.Point{
+		X: 0,                                // required field will serialize as 0
+		Y: githubcomtzafoncomputergo.Int(1), // optional field will serialize as 1
 		// ... omitted non-required fields will not be serialized
 	},
 
-	Origin: computer.Origin{}, // the zero value of [Origin] is considered omitted
+	Origin: githubcomtzafoncomputergo.Origin{}, // the zero value of [Origin] is considered omitted
 }
 ```
 
@@ -129,7 +129,7 @@ p.SetExtraFields(map[string]any{
 })
 
 // Send a number instead of an object
-custom := param.Override[computer.FooParams](12)
+custom := param.Override[githubcomtzafoncomputergo.FooParams](12)
 ```
 
 ### Request unions
@@ -270,7 +270,7 @@ This library uses the functional options pattern. Functions defined in the
 requests. For example:
 
 ```go
-client := computer.NewClient(
+client := githubcomtzafoncomputergo.NewClient(
 	// Adds a header to every request made by the client
 	option.WithHeader("X-Some-Header", "custom_header_info"),
 )
@@ -299,7 +299,7 @@ with additional helper methods like `.GetNextPage()`, e.g.:
 ### Errors
 
 When the API returns a non-success status code, we return an error with type
-`*computer.Error`. This contains the `StatusCode`, `*http.Request`, and
+`*githubcomtzafoncomputergo.Error`. This contains the `StatusCode`, `*http.Request`, and
 `*http.Response` values of the request, as well as the JSON of the error body
 (much like other response objects in the SDK).
 
@@ -308,7 +308,7 @@ To handle errors, we recommend that you use the `errors.As` pattern:
 ```go
 _, err := client.Computers.List(context.TODO())
 if err != nil {
-	var apierr *computer.Error
+	var apierr *githubcomtzafoncomputergo.Error
 	if errors.As(err, &apierr) {
 		println(string(apierr.DumpRequest(true)))  // Prints the serialized HTTP request
 		println(string(apierr.DumpResponse(true))) // Prints the serialized HTTP response
@@ -348,7 +348,7 @@ The file name and content-type can be customized by implementing `Name() string`
 string` on the run-time type of `io.Reader`. Note that `os.File` implements `Name() string`, so a
 file returned by `os.Open` will be sent with the file name on disk.
 
-We also provide a helper `computer.File(reader io.Reader, filename string, contentType string)`
+We also provide a helper `githubcomtzafoncomputergo.File(reader io.Reader, filename string, contentType string)`
 which can be used to wrap any `io.Reader` with the appropriate file name and content type.
 
 ### Retries
@@ -361,7 +361,7 @@ You can use the `WithMaxRetries` option to configure or disable this:
 
 ```go
 // Configure the default for all requests:
-client := computer.NewClient(
+client := githubcomtzafoncomputergo.NewClient(
 	option.WithMaxRetries(0), // default is 2
 )
 
@@ -422,7 +422,7 @@ or the `option.WithJSONSet()` methods.
 params := FooNewParams{
     ID:   "id_xxxx",
     Data: FooNewParamsData{
-        FirstName: computer.String("John"),
+        FirstName: githubcomtzafoncomputergo.String("John"),
     },
 }
 client.Foo.New(context.Background(), params, option.WithJSONSet("data.last_name", "Doe"))
@@ -457,7 +457,7 @@ func Logger(req *http.Request, next option.MiddlewareNext) (res *http.Response, 
     return res, err
 }
 
-client := computer.NewClient(
+client := githubcomtzafoncomputergo.NewClient(
 	option.WithMiddleware(Logger),
 )
 ```
