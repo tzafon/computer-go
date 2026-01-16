@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/stainless-sdks/computer-go/packages/param"
+	"github.com/tzafon/computer-go/packages/param"
 )
 
 var encoders sync.Map // map[reflect.Type]encoderFunc

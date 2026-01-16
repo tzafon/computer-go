@@ -8,8 +8,8 @@ import (
 	"os"
 	"slices"
 
-	"github.com/stainless-sdks/computer-go/internal/requestconfig"
-	"github.com/stainless-sdks/computer-go/option"
+	"github.com/tzafon/computer-go/internal/requestconfig"
+	"github.com/tzafon/computer-go/option"
 )
 
 // Client creates a struct with services and top level methods that help with

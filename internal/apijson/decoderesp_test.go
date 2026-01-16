@@ -2,8 +2,8 @@ package apijson_test
 
 import (
 	"encoding/json"
-	"github.com/stainless-sdks/computer-go/internal/apijson"
-	"github.com/stainless-sdks/computer-go/packages/respjson"
+	"github.com/tzafon/computer-go/internal/apijson"
+	"github.com/tzafon/computer-go/packages/respjson"
 	"testing"
 )
 

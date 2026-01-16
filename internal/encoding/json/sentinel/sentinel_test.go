@@ -1,8 +1,8 @@
 package sentinel_test
 
 import (
-	"github.com/stainless-sdks/computer-go/internal/encoding/json/sentinel"
-	"github.com/stainless-sdks/computer-go/packages/param"
+	"github.com/tzafon/computer-go/internal/encoding/json/sentinel"
+	"github.com/tzafon/computer-go/packages/param"
 	"reflect"
 	"slices"
 	"testing"

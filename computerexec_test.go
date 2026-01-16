@@ -8,9 +8,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stainless-sdks/computer-go"
-	"github.com/stainless-sdks/computer-go/internal/testutil"
-	"github.com/stainless-sdks/computer-go/option"
+	"github.com/tzafon/computer-go"
+	"github.com/tzafon/computer-go/internal/testutil"
+	"github.com/tzafon/computer-go/option"
 )
 
 func TestComputerExecExecuteSyncWithOptionalParams(t *testing.T) {
