@@ -6,8 +6,8 @@
 
 <!-- x-release-please-end -->
 
-The Computer Go library provides convenient access to the [Computer REST API](http://docs.tzafon.ai)
-from applications written in Go.
+Remote browser and desktop automation from Go. Control Chromium browsers and Linux desktops through the
+[Tzafon Computer API](https://docs.tzafon.ai).
 
 It is generated with [Stainless](https://www.stainless.com/).
 
@@ -46,7 +46,16 @@ go get -u 'github.com/tzafon/computer-go@v0.1.0'
 
 This library requires Go 1.22+.
 
-## Usage
+## Configuration
+
+Set `TZAFON_API_KEY` for authentication. `computer.NewClient()` reads it automatically.
+To point at a self-hosted go-backend, set `COMPUTER_BASE_URL` or use `option.WithBaseURL`.
+
+```bash
+export TZAFON_API_KEY="sk_your_api_key"
+```
+
+## Quickstart
 
 The full API of this library can be found in [api.md](api.md).
 
@@ -56,22 +65,172 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/tzafon/computer-go"
-	"github.com/tzafon/computer-go/option"
 )
 
 func main() {
-	client := computer.NewClient(
-		option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("TZAFON_API_KEY")
-	)
-	computerResponses, err := client.Computers.List(context.TODO())
+	ctx := context.Background()
+	client := computer.NewClient()
+
+	session, err := client.Computers.New(ctx, computer.ComputerNewParams{
+		Kind: computer.String("browser"),
+		Display: computer.ComputerNewParamsDisplay{
+			Width:  computer.Int(1280),
+			Height: computer.Int(720),
+			Scale:  computer.Float(1.0),
+		},
+	})
 	if err != nil {
-		panic(err.Error())
+		log.Fatal(err)
 	}
-	fmt.Printf("%+v\n", computerResponses)
+	defer client.Computers.Terminate(ctx, session.ID)
+
+	_, err = client.Computers.Navigate(ctx, session.ID, computer.ComputerNavigateParams{
+		URL: computer.String("https://wikipedia.org"),
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	screenshot, err := client.Computers.CaptureScreenshot(ctx, session.ID, computer.ComputerCaptureScreenshotParams{})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if url, ok := screenshot.Result["screenshot_url"].(string); ok {
+		fmt.Println("Screenshot:", url)
+	}
 }
 
+```
+
+## Sessions
+
+Sessions can be `browser` or `desktop`. `Navigate` is browser-only. Use `timeout_seconds`,
+`inactivity_timeout_seconds`, and `auto_kill` to control lifetime and idle shutdown. Setting
+`auto_kill` to false disables idle termination but max lifetime still applies. Call `KeepAlive` to
+reset the inactivity timer, `GetStatus` for TTLs, and `Terminate` when done.
+
+```go
+status, err := client.Computers.GetStatus(ctx, session.ID)
+if err != nil {
+	log.Fatal(err)
+}
+fmt.Println("Idle expires:", status.IdleExpiresAt)
+
+_, err = client.Computers.KeepAlive(ctx, session.ID)
+if err != nil {
+	log.Fatal(err)
+}
+```
+
+## Actions
+
+Use direct helpers (`Navigate`, `Click`, `TypeText`, `CaptureScreenshot`, `GetHTML`, `SetViewport`,
+`ChangeProxy`) or `ExecuteAction`/`ExecuteBatch` for low-level control, `include_context`, or tab
+targeting.
+
+```go
+result, err := client.Computers.ExecuteAction(ctx, session.ID, computer.ComputerExecuteActionParams{
+	Action: computer.ComputerExecuteActionParamsAction{
+		Type:           computer.String("screenshot"),
+		IncludeContext: computer.Bool(true),
+	},
+})
+if err != nil {
+	log.Fatal(err)
+}
+if result.JSON.PageContext.Valid() {
+	fmt.Println(result.PageContext.URL, result.PageContext.ViewportWidth, result.PageContext.ViewportHeight)
+}
+```
+
+```go
+_, err = client.Computers.ExecuteBatch(ctx, session.ID, computer.ComputerExecuteBatchParams{
+	Actions: []computer.ComputerExecuteBatchParamsAction{{
+		Type: computer.String("go_to_url"),
+		URL:  computer.String("https://example.com"),
+	}, {
+		Type: computer.String("wait"),
+		Ms:   computer.Int(1000),
+	}, {
+		Type: computer.String("screenshot"),
+	}},
+})
+if err != nil {
+	log.Fatal(err)
+}
+```
+
+## Tabs
+
+Tabs are browser-only. Use the Tabs service or pass `tab_id` to actions.
+
+```go
+newTab, err := client.Computers.Tabs.New(ctx, session.ID, computer.ComputerTabNewParams{
+	URL: computer.String("https://example.com"),
+})
+if err != nil {
+	log.Fatal(err)
+}
+
+_, err = client.Computers.Click(ctx, session.ID, computer.ComputerClickParams{
+	TabID: computer.String(newTab.ExecutedTabID),
+	X:     computer.Float(200),
+	Y:     computer.Float(300),
+})
+if err != nil {
+	log.Fatal(err)
+}
+```
+
+## Streaming
+
+Event and screencast streams use Server-Sent Events (SSE) via `StreamEvents` and `StreamScreencast`.
+Screencast frames are base64 JPEG payloads. Capture the response and read the body. The example below
+uses `option.WithResponseInto` and standard library `bufio`/`strings`.
+library `bufio`/`strings`.
+
+```go
+var resp *http.Response
+err := client.Computers.StreamEvents(ctx, session.ID, option.WithResponseInto(&resp))
+if err != nil {
+	log.Fatal(err)
+}
+defer resp.Body.Close()
+
+scanner := bufio.NewScanner(resp.Body)
+for scanner.Scan() {
+	line := scanner.Text()
+	if strings.HasPrefix(line, "data:") {
+		fmt.Println(strings.TrimSpace(strings.TrimPrefix(line, "data:")))
+	}
+}
+if err := scanner.Err(); err != nil {
+	log.Fatal(err)
+}
+```
+
+## Exec (desktop only)
+
+Run shell commands in desktop sessions with streaming NDJSON or buffered output. The older `Debug`
+endpoint is deprecated in favor of `Exec`.
+
+```go
+stream := client.Computers.Exec.ExecuteStreaming(ctx, session.ID, computer.ComputerExecExecuteParams{
+	Command: computer.String("ls -la"),
+})
+defer stream.Close()
+
+for stream.Next() {
+	msg := stream.Current()
+	fmt.Printf("%s: %s\n", msg.Type, msg.Data)
+}
+if err := stream.Err(); err != nil {
+	log.Fatal(err)
+}
 ```
 
 ### Request fields
