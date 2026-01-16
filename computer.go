@@ -39,6 +39,9 @@ func NewComputerService(opts ...option.RequestOption) (r ComputerService) {
 
 // Create a new automation session. Set kind to "browser" for web automation or
 // "desktop" for OS-level automation. Defaults to "browser" if not specified.
+// timeout_seconds controls max lifetime, inactivity_timeout_seconds controls idle
+// timeout, and auto_kill disables only the idle timeout (max lifetime still
+// applies).
 func (r *ComputerService) New(ctx context.Context, body ComputerNewParams, opts ...option.RequestOption) (res *ComputerNewResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	path := "computers"
@@ -370,20 +373,32 @@ func (r *ComputerService) TypeText(ctx context.Context, id string, body Computer
 }
 
 type ComputerNewResponse struct {
-	ID        string            `json:"id"`
-	CreatedAt string            `json:"created_at"`
-	Endpoints map[string]string `json:"endpoints"`
-	Kind      string            `json:"kind"`
-	Status    string            `json:"status"`
+	ID                       string            `json:"id"`
+	AutoKill                 bool              `json:"auto_kill"`
+	CreatedAt                string            `json:"created_at"`
+	Endpoints                map[string]string `json:"endpoints"`
+	ExpiresAt                string            `json:"expires_at"`
+	IdleExpiresAt            string            `json:"idle_expires_at"`
+	InactivityTimeoutSeconds int64             `json:"inactivity_timeout_seconds"`
+	Kind                     string            `json:"kind"`
+	LastActivityAt           string            `json:"last_activity_at"`
+	MaxLifetimeSeconds       int64             `json:"max_lifetime_seconds"`
+	Status                   string            `json:"status"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ID          respjson.Field
-		CreatedAt   respjson.Field
-		Endpoints   respjson.Field
-		Kind        respjson.Field
-		Status      respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
+		ID                       respjson.Field
+		AutoKill                 respjson.Field
+		CreatedAt                respjson.Field
+		Endpoints                respjson.Field
+		ExpiresAt                respjson.Field
+		IdleExpiresAt            respjson.Field
+		InactivityTimeoutSeconds respjson.Field
+		Kind                     respjson.Field
+		LastActivityAt           respjson.Field
+		MaxLifetimeSeconds       respjson.Field
+		Status                   respjson.Field
+		ExtraFields              map[string]respjson.Field
+		raw                      string
 	} `json:"-"`
 }
 
@@ -394,20 +409,32 @@ func (r *ComputerNewResponse) UnmarshalJSON(data []byte) error {
 }
 
 type ComputerGetResponse struct {
-	ID        string            `json:"id"`
-	CreatedAt string            `json:"created_at"`
-	Endpoints map[string]string `json:"endpoints"`
-	Kind      string            `json:"kind"`
-	Status    string            `json:"status"`
+	ID                       string            `json:"id"`
+	AutoKill                 bool              `json:"auto_kill"`
+	CreatedAt                string            `json:"created_at"`
+	Endpoints                map[string]string `json:"endpoints"`
+	ExpiresAt                string            `json:"expires_at"`
+	IdleExpiresAt            string            `json:"idle_expires_at"`
+	InactivityTimeoutSeconds int64             `json:"inactivity_timeout_seconds"`
+	Kind                     string            `json:"kind"`
+	LastActivityAt           string            `json:"last_activity_at"`
+	MaxLifetimeSeconds       int64             `json:"max_lifetime_seconds"`
+	Status                   string            `json:"status"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ID          respjson.Field
-		CreatedAt   respjson.Field
-		Endpoints   respjson.Field
-		Kind        respjson.Field
-		Status      respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
+		ID                       respjson.Field
+		AutoKill                 respjson.Field
+		CreatedAt                respjson.Field
+		Endpoints                respjson.Field
+		ExpiresAt                respjson.Field
+		IdleExpiresAt            respjson.Field
+		InactivityTimeoutSeconds respjson.Field
+		Kind                     respjson.Field
+		LastActivityAt           respjson.Field
+		MaxLifetimeSeconds       respjson.Field
+		Status                   respjson.Field
+		ExtraFields              map[string]respjson.Field
+		raw                      string
 	} `json:"-"`
 }
 
@@ -418,20 +445,32 @@ func (r *ComputerGetResponse) UnmarshalJSON(data []byte) error {
 }
 
 type ComputerListResponse struct {
-	ID        string            `json:"id"`
-	CreatedAt string            `json:"created_at"`
-	Endpoints map[string]string `json:"endpoints"`
-	Kind      string            `json:"kind"`
-	Status    string            `json:"status"`
+	ID                       string            `json:"id"`
+	AutoKill                 bool              `json:"auto_kill"`
+	CreatedAt                string            `json:"created_at"`
+	Endpoints                map[string]string `json:"endpoints"`
+	ExpiresAt                string            `json:"expires_at"`
+	IdleExpiresAt            string            `json:"idle_expires_at"`
+	InactivityTimeoutSeconds int64             `json:"inactivity_timeout_seconds"`
+	Kind                     string            `json:"kind"`
+	LastActivityAt           string            `json:"last_activity_at"`
+	MaxLifetimeSeconds       int64             `json:"max_lifetime_seconds"`
+	Status                   string            `json:"status"`
 	// JSON contains metadata for fields, check presence with [respjson.Field.Valid].
 	JSON struct {
-		ID          respjson.Field
-		CreatedAt   respjson.Field
-		Endpoints   respjson.Field
-		Kind        respjson.Field
-		Status      respjson.Field
-		ExtraFields map[string]respjson.Field
-		raw         string
+		ID                       respjson.Field
+		AutoKill                 respjson.Field
+		CreatedAt                respjson.Field
+		Endpoints                respjson.Field
+		ExpiresAt                respjson.Field
+		IdleExpiresAt            respjson.Field
+		InactivityTimeoutSeconds respjson.Field
+		Kind                     respjson.Field
+		LastActivityAt           respjson.Field
+		MaxLifetimeSeconds       respjson.Field
+		Status                   respjson.Field
+		ExtraFields              map[string]respjson.Field
+		raw                      string
 	} `json:"-"`
 }
 
@@ -1537,6 +1576,8 @@ type ComputerNewParams struct {
 	// If true (default), kill session after inactivity
 	AutoKill  param.Opt[bool]   `json:"auto_kill,omitzero"`
 	ContextID param.Opt[string] `json:"context_id,omitzero"`
+	// Idle timeout before auto-kill
+	InactivityTimeoutSeconds param.Opt[int64] `json:"inactivity_timeout_seconds,omitzero"`
 	// "browser" (default) or "desktop"
 	Kind           param.Opt[string]        `json:"kind,omitzero"`
 	TimeoutSeconds param.Opt[int64]         `json:"timeout_seconds,omitzero"`
