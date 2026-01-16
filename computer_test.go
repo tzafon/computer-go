@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package computer_test
+package githubcomtzafoncomputergo_test
 
 import (
 	"context"
@@ -22,25 +22,25 @@ func TestComputerNewWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Computers.New(context.TODO(), computer.ComputerNewParams{
-		AutoKill:  computer.Bool(true),
-		ContextID: computer.String("context_id"),
-		Display: computer.ComputerNewParamsDisplay{
-			Height: computer.Int(0),
-			Scale:  computer.Float(0),
-			Width:  computer.Int(0),
+	_, err := client.Computers.New(context.TODO(), githubcomtzafoncomputergo.ComputerNewParams{
+		AutoKill:  githubcomtzafoncomputergo.Bool(true),
+		ContextID: githubcomtzafoncomputergo.String("context_id"),
+		Display: githubcomtzafoncomputergo.ComputerNewParamsDisplay{
+			Height: githubcomtzafoncomputergo.Int(0),
+			Scale:  githubcomtzafoncomputergo.Float(0),
+			Width:  githubcomtzafoncomputergo.Int(0),
 		},
-		InactivityTimeoutSeconds: computer.Int(0),
-		Kind:                     computer.String("kind"),
+		InactivityTimeoutSeconds: githubcomtzafoncomputergo.Int(0),
+		Kind:                     githubcomtzafoncomputergo.String("kind"),
 		Stealth:                  map[string]any{},
-		TimeoutSeconds:           computer.Int(0),
+		TimeoutSeconds:           githubcomtzafoncomputergo.Int(0),
 	})
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -57,13 +57,13 @@ func TestComputerGet(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Computers.Get(context.TODO(), "id")
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -80,13 +80,13 @@ func TestComputerList(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Computers.List(context.TODO())
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -103,20 +103,20 @@ func TestComputerCaptureScreenshotWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Computers.CaptureScreenshot(
 		context.TODO(),
 		"id",
-		computer.ComputerCaptureScreenshotParams{
-			Base64: computer.Bool(true),
-			TabID:  computer.String("tab_id"),
+		githubcomtzafoncomputergo.ComputerCaptureScreenshotParams{
+			Base64: githubcomtzafoncomputergo.Bool(true),
+			TabID:  githubcomtzafoncomputergo.String("tab_id"),
 		},
 	)
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -133,19 +133,19 @@ func TestComputerChangeProxyWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Computers.ChangeProxy(
 		context.TODO(),
 		"id",
-		computer.ComputerChangeProxyParams{
-			ProxyURL: computer.String("proxy_url"),
+		githubcomtzafoncomputergo.ComputerChangeProxyParams{
+			ProxyURL: githubcomtzafoncomputergo.String("proxy_url"),
 		},
 	)
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -162,21 +162,21 @@ func TestComputerClickWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Computers.Click(
 		context.TODO(),
 		"id",
-		computer.ComputerClickParams{
-			TabID: computer.String("tab_id"),
-			X:     computer.Float(0),
-			Y:     computer.Float(0),
+		githubcomtzafoncomputergo.ComputerClickParams{
+			TabID: githubcomtzafoncomputergo.String("tab_id"),
+			X:     githubcomtzafoncomputergo.Float(0),
+			Y:     githubcomtzafoncomputergo.Float(0),
 		},
 	)
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -193,13 +193,13 @@ func TestComputerConnectWebsocket(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	err := client.Computers.ConnectWebsocket(context.TODO(), "id")
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -216,22 +216,22 @@ func TestComputerDebugWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Computers.Debug(
 		context.TODO(),
 		"id",
-		computer.ComputerDebugParams{
-			Command:         computer.String("command"),
-			MaxOutputLength: computer.Int(0),
-			TabID:           computer.String("tab_id"),
-			TimeoutSeconds:  computer.Int(0),
+		githubcomtzafoncomputergo.ComputerDebugParams{
+			Command:         githubcomtzafoncomputergo.String("command"),
+			MaxOutputLength: githubcomtzafoncomputergo.Int(0),
+			TabID:           githubcomtzafoncomputergo.String("tab_id"),
+			TimeoutSeconds:  githubcomtzafoncomputergo.Int(0),
 		},
 	)
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -248,21 +248,21 @@ func TestComputerDoubleClickWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Computers.DoubleClick(
 		context.TODO(),
 		"id",
-		computer.ComputerDoubleClickParams{
-			TabID: computer.String("tab_id"),
-			X:     computer.Float(0),
-			Y:     computer.Float(0),
+		githubcomtzafoncomputergo.ComputerDoubleClickParams{
+			TabID: githubcomtzafoncomputergo.String("tab_id"),
+			X:     githubcomtzafoncomputergo.Float(0),
+			Y:     githubcomtzafoncomputergo.Float(0),
 		},
 	)
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -279,23 +279,23 @@ func TestComputerDragWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Computers.Drag(
 		context.TODO(),
 		"id",
-		computer.ComputerDragParams{
-			TabID: computer.String("tab_id"),
-			X1:    computer.Float(0),
-			X2:    computer.Float(0),
-			Y1:    computer.Float(0),
-			Y2:    computer.Float(0),
+		githubcomtzafoncomputergo.ComputerDragParams{
+			TabID: githubcomtzafoncomputergo.String("tab_id"),
+			X1:    githubcomtzafoncomputergo.Float(0),
+			X2:    githubcomtzafoncomputergo.Float(0),
+			Y1:    githubcomtzafoncomputergo.Float(0),
+			Y2:    githubcomtzafoncomputergo.Float(0),
 		},
 	)
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -312,55 +312,55 @@ func TestComputerExecuteActionWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Computers.ExecuteAction(
 		context.TODO(),
 		"id",
-		computer.ComputerExecuteActionParams{
-			Action: computer.ComputerExecuteActionParamsAction{
-				AutoDetectEncoding: computer.Bool(true),
-				Base64:             computer.Bool(true),
-				Button:             computer.String("button"),
-				Debug: computer.ComputerExecuteActionParamsActionDebug{
-					Command: computer.String("command"),
-					Cwd:     computer.String("cwd"),
+		githubcomtzafoncomputergo.ComputerExecuteActionParams{
+			Action: githubcomtzafoncomputergo.ComputerExecuteActionParamsAction{
+				AutoDetectEncoding: githubcomtzafoncomputergo.Bool(true),
+				Base64:             githubcomtzafoncomputergo.Bool(true),
+				Button:             githubcomtzafoncomputergo.String("button"),
+				Debug: githubcomtzafoncomputergo.ComputerExecuteActionParamsActionDebug{
+					Command: githubcomtzafoncomputergo.String("command"),
+					Cwd:     githubcomtzafoncomputergo.String("cwd"),
 					Env: map[string]string{
 						"foo": "string",
 					},
-					MaxOutputLength: computer.Int(0),
-					RequestID:       computer.String("request_id"),
-					Stream:          computer.Bool(true),
-					TimeoutSeconds:  computer.Int(0),
+					MaxOutputLength: githubcomtzafoncomputergo.Int(0),
+					RequestID:       githubcomtzafoncomputergo.String("request_id"),
+					Stream:          githubcomtzafoncomputergo.Bool(true),
+					TimeoutSeconds:  githubcomtzafoncomputergo.Int(0),
 				},
-				Dx:             computer.Float(0),
-				Dy:             computer.Float(0),
-				Height:         computer.Int(0),
-				IncludeContext: computer.Bool(true),
-				Key:            computer.String("key"),
+				Dx:             githubcomtzafoncomputergo.Float(0),
+				Dy:             githubcomtzafoncomputergo.Float(0),
+				Height:         githubcomtzafoncomputergo.Int(0),
+				IncludeContext: githubcomtzafoncomputergo.Bool(true),
+				Key:            githubcomtzafoncomputergo.String("key"),
 				Keys:           []string{"string"},
-				Ms:             computer.Int(0),
-				ProxyURL:       computer.String("proxy_url"),
-				RequestID:      computer.String("request_id"),
-				ScaleFactor:    computer.Float(0),
-				TabID:          computer.String("tab_id"),
-				Text:           computer.String("text"),
-				Type:           computer.String("type"),
-				URL:            computer.String("url"),
-				Width:          computer.Int(0),
-				X:              computer.Float(0),
-				X1:             computer.Float(0),
-				X2:             computer.Float(0),
-				Y:              computer.Float(0),
-				Y1:             computer.Float(0),
-				Y2:             computer.Float(0),
+				Ms:             githubcomtzafoncomputergo.Int(0),
+				ProxyURL:       githubcomtzafoncomputergo.String("proxy_url"),
+				RequestID:      githubcomtzafoncomputergo.String("request_id"),
+				ScaleFactor:    githubcomtzafoncomputergo.Float(0),
+				TabID:          githubcomtzafoncomputergo.String("tab_id"),
+				Text:           githubcomtzafoncomputergo.String("text"),
+				Type:           githubcomtzafoncomputergo.String("type"),
+				URL:            githubcomtzafoncomputergo.String("url"),
+				Width:          githubcomtzafoncomputergo.Int(0),
+				X:              githubcomtzafoncomputergo.Float(0),
+				X1:             githubcomtzafoncomputergo.Float(0),
+				X2:             githubcomtzafoncomputergo.Float(0),
+				Y:              githubcomtzafoncomputergo.Float(0),
+				Y1:             githubcomtzafoncomputergo.Float(0),
+				Y2:             githubcomtzafoncomputergo.Float(0),
 			},
 		},
 	)
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -377,55 +377,55 @@ func TestComputerExecuteBatchWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Computers.ExecuteBatch(
 		context.TODO(),
 		"id",
-		computer.ComputerExecuteBatchParams{
-			Actions: []computer.ComputerExecuteBatchParamsAction{{
-				AutoDetectEncoding: computer.Bool(true),
-				Base64:             computer.Bool(true),
-				Button:             computer.String("button"),
-				Debug: computer.ComputerExecuteBatchParamsActionDebug{
-					Command: computer.String("command"),
-					Cwd:     computer.String("cwd"),
+		githubcomtzafoncomputergo.ComputerExecuteBatchParams{
+			Actions: []githubcomtzafoncomputergo.ComputerExecuteBatchParamsAction{{
+				AutoDetectEncoding: githubcomtzafoncomputergo.Bool(true),
+				Base64:             githubcomtzafoncomputergo.Bool(true),
+				Button:             githubcomtzafoncomputergo.String("button"),
+				Debug: githubcomtzafoncomputergo.ComputerExecuteBatchParamsActionDebug{
+					Command: githubcomtzafoncomputergo.String("command"),
+					Cwd:     githubcomtzafoncomputergo.String("cwd"),
 					Env: map[string]string{
 						"foo": "string",
 					},
-					MaxOutputLength: computer.Int(0),
-					RequestID:       computer.String("request_id"),
-					Stream:          computer.Bool(true),
-					TimeoutSeconds:  computer.Int(0),
+					MaxOutputLength: githubcomtzafoncomputergo.Int(0),
+					RequestID:       githubcomtzafoncomputergo.String("request_id"),
+					Stream:          githubcomtzafoncomputergo.Bool(true),
+					TimeoutSeconds:  githubcomtzafoncomputergo.Int(0),
 				},
-				Dx:             computer.Float(0),
-				Dy:             computer.Float(0),
-				Height:         computer.Int(0),
-				IncludeContext: computer.Bool(true),
-				Key:            computer.String("key"),
+				Dx:             githubcomtzafoncomputergo.Float(0),
+				Dy:             githubcomtzafoncomputergo.Float(0),
+				Height:         githubcomtzafoncomputergo.Int(0),
+				IncludeContext: githubcomtzafoncomputergo.Bool(true),
+				Key:            githubcomtzafoncomputergo.String("key"),
 				Keys:           []string{"string"},
-				Ms:             computer.Int(0),
-				ProxyURL:       computer.String("proxy_url"),
-				RequestID:      computer.String("request_id"),
-				ScaleFactor:    computer.Float(0),
-				TabID:          computer.String("tab_id"),
-				Text:           computer.String("text"),
-				Type:           computer.String("type"),
-				URL:            computer.String("url"),
-				Width:          computer.Int(0),
-				X:              computer.Float(0),
-				X1:             computer.Float(0),
-				X2:             computer.Float(0),
-				Y:              computer.Float(0),
-				Y1:             computer.Float(0),
-				Y2:             computer.Float(0),
+				Ms:             githubcomtzafoncomputergo.Int(0),
+				ProxyURL:       githubcomtzafoncomputergo.String("proxy_url"),
+				RequestID:      githubcomtzafoncomputergo.String("request_id"),
+				ScaleFactor:    githubcomtzafoncomputergo.Float(0),
+				TabID:          githubcomtzafoncomputergo.String("tab_id"),
+				Text:           githubcomtzafoncomputergo.String("text"),
+				Type:           githubcomtzafoncomputergo.String("type"),
+				URL:            githubcomtzafoncomputergo.String("url"),
+				Width:          githubcomtzafoncomputergo.Int(0),
+				X:              githubcomtzafoncomputergo.Float(0),
+				X1:             githubcomtzafoncomputergo.Float(0),
+				X2:             githubcomtzafoncomputergo.Float(0),
+				Y:              githubcomtzafoncomputergo.Float(0),
+				Y1:             githubcomtzafoncomputergo.Float(0),
+				Y2:             githubcomtzafoncomputergo.Float(0),
 			}},
 		},
 	)
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -442,20 +442,20 @@ func TestComputerGetHTMLWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Computers.GetHTML(
 		context.TODO(),
 		"id",
-		computer.ComputerGetHTMLParams{
-			AutoDetectEncoding: computer.Bool(true),
-			TabID:              computer.String("tab_id"),
+		githubcomtzafoncomputergo.ComputerGetHTMLParams{
+			AutoDetectEncoding: githubcomtzafoncomputergo.Bool(true),
+			TabID:              githubcomtzafoncomputergo.String("tab_id"),
 		},
 	)
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -472,13 +472,13 @@ func TestComputerKeepAlive(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Computers.KeepAlive(context.TODO(), "id")
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -495,20 +495,20 @@ func TestComputerKeyDownWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Computers.KeyDown(
 		context.TODO(),
 		"id",
-		computer.ComputerKeyDownParams{
-			Key:   computer.String("key"),
-			TabID: computer.String("tab_id"),
+		githubcomtzafoncomputergo.ComputerKeyDownParams{
+			Key:   githubcomtzafoncomputergo.String("key"),
+			TabID: githubcomtzafoncomputergo.String("tab_id"),
 		},
 	)
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -525,20 +525,20 @@ func TestComputerKeyUpWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Computers.KeyUp(
 		context.TODO(),
 		"id",
-		computer.ComputerKeyUpParams{
-			Key:   computer.String("key"),
-			TabID: computer.String("tab_id"),
+		githubcomtzafoncomputergo.ComputerKeyUpParams{
+			Key:   githubcomtzafoncomputergo.String("key"),
+			TabID: githubcomtzafoncomputergo.String("tab_id"),
 		},
 	)
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -555,21 +555,21 @@ func TestComputerMouseDownWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Computers.MouseDown(
 		context.TODO(),
 		"id",
-		computer.ComputerMouseDownParams{
-			TabID: computer.String("tab_id"),
-			X:     computer.Float(0),
-			Y:     computer.Float(0),
+		githubcomtzafoncomputergo.ComputerMouseDownParams{
+			TabID: githubcomtzafoncomputergo.String("tab_id"),
+			X:     githubcomtzafoncomputergo.Float(0),
+			Y:     githubcomtzafoncomputergo.Float(0),
 		},
 	)
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -586,21 +586,21 @@ func TestComputerMouseUpWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Computers.MouseUp(
 		context.TODO(),
 		"id",
-		computer.ComputerMouseUpParams{
-			TabID: computer.String("tab_id"),
-			X:     computer.Float(0),
-			Y:     computer.Float(0),
+		githubcomtzafoncomputergo.ComputerMouseUpParams{
+			TabID: githubcomtzafoncomputergo.String("tab_id"),
+			X:     githubcomtzafoncomputergo.Float(0),
+			Y:     githubcomtzafoncomputergo.Float(0),
 		},
 	)
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -617,20 +617,20 @@ func TestComputerNavigateWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Computers.Navigate(
 		context.TODO(),
 		"id",
-		computer.ComputerNavigateParams{
-			TabID: computer.String("tab_id"),
-			URL:   computer.String("url"),
+		githubcomtzafoncomputergo.ComputerNavigateParams{
+			TabID: githubcomtzafoncomputergo.String("tab_id"),
+			URL:   githubcomtzafoncomputergo.String("url"),
 		},
 	)
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -647,20 +647,20 @@ func TestComputerPressHotkeyWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Computers.PressHotkey(
 		context.TODO(),
 		"id",
-		computer.ComputerPressHotkeyParams{
+		githubcomtzafoncomputergo.ComputerPressHotkeyParams{
 			Keys:  []string{"string"},
-			TabID: computer.String("tab_id"),
+			TabID: githubcomtzafoncomputergo.String("tab_id"),
 		},
 	)
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -677,13 +677,13 @@ func TestComputerGetStatus(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Computers.GetStatus(context.TODO(), "id")
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -700,21 +700,21 @@ func TestComputerRightClickWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Computers.RightClick(
 		context.TODO(),
 		"id",
-		computer.ComputerRightClickParams{
-			TabID: computer.String("tab_id"),
-			X:     computer.Float(0),
-			Y:     computer.Float(0),
+		githubcomtzafoncomputergo.ComputerRightClickParams{
+			TabID: githubcomtzafoncomputergo.String("tab_id"),
+			X:     githubcomtzafoncomputergo.Float(0),
+			Y:     githubcomtzafoncomputergo.Float(0),
 		},
 	)
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -731,23 +731,23 @@ func TestComputerScrollViewportWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Computers.ScrollViewport(
 		context.TODO(),
 		"id",
-		computer.ComputerScrollViewportParams{
-			Dx:    computer.Float(0),
-			Dy:    computer.Float(0),
-			TabID: computer.String("tab_id"),
-			X:     computer.Float(0),
-			Y:     computer.Float(0),
+		githubcomtzafoncomputergo.ComputerScrollViewportParams{
+			Dx:    githubcomtzafoncomputergo.Float(0),
+			Dy:    githubcomtzafoncomputergo.Float(0),
+			TabID: githubcomtzafoncomputergo.String("tab_id"),
+			X:     githubcomtzafoncomputergo.Float(0),
+			Y:     githubcomtzafoncomputergo.Float(0),
 		},
 	)
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -764,22 +764,22 @@ func TestComputerSetViewportWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Computers.SetViewport(
 		context.TODO(),
 		"id",
-		computer.ComputerSetViewportParams{
-			Height:      computer.Int(0),
-			ScaleFactor: computer.Float(0),
-			TabID:       computer.String("tab_id"),
-			Width:       computer.Int(0),
+		githubcomtzafoncomputergo.ComputerSetViewportParams{
+			Height:      githubcomtzafoncomputergo.Int(0),
+			ScaleFactor: githubcomtzafoncomputergo.Float(0),
+			TabID:       githubcomtzafoncomputergo.String("tab_id"),
+			Width:       githubcomtzafoncomputergo.Int(0),
 		},
 	)
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -796,13 +796,13 @@ func TestComputerStreamEvents(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	err := client.Computers.StreamEvents(context.TODO(), "id")
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -819,13 +819,13 @@ func TestComputerStreamScreencast(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	err := client.Computers.StreamScreencast(context.TODO(), "id")
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -842,13 +842,13 @@ func TestComputerTerminate(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	err := client.Computers.Terminate(context.TODO(), "id")
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -865,20 +865,20 @@ func TestComputerTypeTextWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Computers.TypeText(
 		context.TODO(),
 		"id",
-		computer.ComputerTypeTextParams{
-			TabID: computer.String("tab_id"),
-			Text:  computer.String("text"),
+		githubcomtzafoncomputergo.ComputerTypeTextParams{
+			TabID: githubcomtzafoncomputergo.String("tab_id"),
+			Text:  githubcomtzafoncomputergo.String("text"),
 		},
 	)
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}

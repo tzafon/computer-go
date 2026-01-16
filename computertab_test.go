@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package computer_test
+package githubcomtzafoncomputergo_test
 
 import (
 	"context"
@@ -22,19 +22,19 @@ func TestComputerTabNewWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Computers.Tabs.New(
 		context.TODO(),
 		"id",
-		computer.ComputerTabNewParams{
-			URL: computer.String("url"),
+		githubcomtzafoncomputergo.ComputerTabNewParams{
+			URL: githubcomtzafoncomputergo.String("url"),
 		},
 	)
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -51,13 +51,13 @@ func TestComputerTabList(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Computers.Tabs.List(context.TODO(), "id")
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -74,19 +74,19 @@ func TestComputerTabDelete(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Computers.Tabs.Delete(
 		context.TODO(),
 		"tab_id",
-		computer.ComputerTabDeleteParams{
+		githubcomtzafoncomputergo.ComputerTabDeleteParams{
 			ID: "id",
 		},
 	)
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
@@ -103,19 +103,19 @@ func TestComputerTabSwitch(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Computers.Tabs.Switch(
 		context.TODO(),
 		"tab_id",
-		computer.ComputerTabSwitchParams{
+		githubcomtzafoncomputergo.ComputerTabSwitchParams{
 			ID: "id",
 		},
 	)
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}

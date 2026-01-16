@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package computer
+package githubcomtzafoncomputergo
 
 import (
 	"github.com/tzafon/computer-go/internal/apierror"

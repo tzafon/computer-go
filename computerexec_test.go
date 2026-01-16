@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package computer_test
+package githubcomtzafoncomputergo_test
 
 import (
 	"context"
@@ -22,24 +22,24 @@ func TestComputerExecExecuteSyncWithOptionalParams(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := computer.NewClient(
+	client := githubcomtzafoncomputergo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Computers.Exec.ExecuteSync(
 		context.TODO(),
 		"id",
-		computer.ComputerExecExecuteSyncParams{
-			Command: computer.String("command"),
-			Cwd:     computer.String("cwd"),
+		githubcomtzafoncomputergo.ComputerExecExecuteSyncParams{
+			Command: githubcomtzafoncomputergo.String("command"),
+			Cwd:     githubcomtzafoncomputergo.String("cwd"),
 			Env: map[string]string{
 				"foo": "string",
 			},
-			TimeoutSeconds: computer.Int(0),
+			TimeoutSeconds: githubcomtzafoncomputergo.Int(0),
 		},
 	)
 	if err != nil {
-		var apierr *computer.Error
+		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}
