@@ -65,13 +65,11 @@ func main() {
 	client := computer.NewClient(
 		option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("TZAFON_API_KEY")
 	)
-	computerResponse, err := client.Computers.New(context.TODO(), computer.ComputerNewParams{
-		Kind: computer.String("browser"),
-	})
+	computerResponses, err := client.Computers.List(context.TODO())
 	if err != nil {
 		panic(err.Error())
 	}
-	fmt.Printf("%+v\n", computerResponse.ID)
+	fmt.Printf("%+v\n", computerResponses)
 }
 
 ```
@@ -277,7 +275,7 @@ client := computer.NewClient(
 	option.WithHeader("X-Some-Header", "custom_header_info"),
 )
 
-client.Computers.New(context.TODO(), ...,
+client.Computers.List(context.TODO(), ...,
 	// Override the header
 	option.WithHeader("X-Some-Header", "some_other_custom_header_info"),
 	// Add an undocumented field to the request body, using sjson syntax
@@ -308,9 +306,7 @@ When the API returns a non-success status code, we return an error with type
 To handle errors, we recommend that you use the `errors.As` pattern:
 
 ```go
-_, err := client.Computers.New(context.TODO(), computer.ComputerNewParams{
-	Kind: computer.String("browser"),
-})
+_, err := client.Computers.List(context.TODO())
 if err != nil {
 	var apierr *computer.Error
 	if errors.As(err, &apierr) {
@@ -335,11 +331,8 @@ To set a per-retry timeout, use `option.WithRequestTimeout()`.
 // This sets the timeout for the request, including all the retries.
 ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 defer cancel()
-client.Computers.New(
+client.Computers.List(
 	ctx,
-	computer.ComputerNewParams{
-		Kind: computer.String("browser"),
-	},
 	// This sets the per-retry timeout
 	option.WithRequestTimeout(20*time.Second),
 )
@@ -373,13 +366,7 @@ client := computer.NewClient(
 )
 
 // Override per-request:
-client.Computers.New(
-	context.TODO(),
-	computer.ComputerNewParams{
-		Kind: computer.String("browser"),
-	},
-	option.WithMaxRetries(5),
-)
+client.Computers.List(context.TODO(), option.WithMaxRetries(5))
 ```
 
 ### Accessing raw response data (e.g. response headers)
@@ -390,17 +377,11 @@ you need to examine response headers, status codes, or other details.
 ```go
 // Create a variable to store the HTTP response
 var response *http.Response
-computerResponse, err := client.Computers.New(
-	context.TODO(),
-	computer.ComputerNewParams{
-		Kind: computer.String("browser"),
-	},
-	option.WithResponseInto(&response),
-)
+computerResponses, err := client.Computers.List(context.TODO(), option.WithResponseInto(&response))
 if err != nil {
 	// handle error
 }
-fmt.Printf("%+v\n", computerResponse)
+fmt.Printf("%+v\n", computerResponses)
 
 fmt.Printf("Status Code: %d\n", response.StatusCode)
 fmt.Printf("Headers: %+#v\n", response.Header)
