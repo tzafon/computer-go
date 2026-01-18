@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.2.1 (2026-01-18)
+
+Full Changelog: [v0.2.0...v0.2.1](https://github.com/tzafon/computer-go/compare/v0.2.0...v0.2.1)
+
+### Bug Fixes
+
+* **docs:** add missing pointer prefix to api.md return types ([b81b5e9](https://github.com/tzafon/computer-go/commit/b81b5e95f1ca1beea522e7f025bcdb790bbba81b))
+
+
+### Chores
+
+* **internal:** update `actions/checkout` version ([74b5a9e](https://github.com/tzafon/computer-go/commit/74b5a9ecb6bcf60aa7fc5af04bb2d5907ddb72d8))
+* remove custom code ([be3d174](https://github.com/tzafon/computer-go/commit/be3d1746a7c3487e0a745b98c3ef7d9149b35079))
+
 ## 0.2.0 (2026-01-16)
 
 Full Changelog: [v0.1.1...v0.2.0](https://github.com/tzafon/computer-go/compare/v0.1.1...v0.2.0)
