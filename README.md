@@ -6,7 +6,7 @@
 
 <!-- x-release-please-end -->
 
-The Computer Go library provides convenient access to the [Computer REST API](http://docs.tzafon.ai)
+The Computer Go library provides convenient access to the [Computer REST API](https://docs.tzafon.ai)
 from applications written in Go.
 
 It is generated with [Stainless](https://www.stainless.com/).
