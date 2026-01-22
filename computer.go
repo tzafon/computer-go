@@ -551,12 +551,15 @@ func (r *ComputerGetStatusResponse) UnmarshalJSON(data []byte) error {
 
 type ComputerNewParams struct {
 	// If true (default), kill session after inactivity
-	AutoKill  param.Opt[bool]   `json:"auto_kill,omitzero"`
-	ContextID param.Opt[string] `json:"context_id,omitzero"`
+	AutoKill      param.Opt[bool]   `json:"auto_kill,omitzero"`
+	ContextID     param.Opt[string] `json:"context_id,omitzero"`
+	EnvironmentID param.Opt[string] `json:"environment_id,omitzero"`
 	// Idle timeout before auto-kill
 	InactivityTimeoutSeconds param.Opt[int64] `json:"inactivity_timeout_seconds,omitzero"`
 	// "browser" (default) or "desktop"
-	Kind           param.Opt[string]        `json:"kind,omitzero"`
+	Kind param.Opt[string] `json:"kind,omitzero"`
+	// Persist cookies/storage state to DB on session teardown only if true
+	Persistent     param.Opt[bool]          `json:"persistent,omitzero"`
 	TimeoutSeconds param.Opt[int64]         `json:"timeout_seconds,omitzero"`
 	Display        ComputerNewParamsDisplay `json:"display,omitzero"`
 	Stealth        any                      `json:"stealth,omitzero"`

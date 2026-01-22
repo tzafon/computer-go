@@ -34,8 +34,10 @@ func TestComputerNewWithOptionalParams(t *testing.T) {
 			Scale:  githubcomtzafoncomputergo.Float(0),
 			Width:  githubcomtzafoncomputergo.Int(0),
 		},
+		EnvironmentID:            githubcomtzafoncomputergo.String("environment_id"),
 		InactivityTimeoutSeconds: githubcomtzafoncomputergo.Int(0),
 		Kind:                     githubcomtzafoncomputergo.String("kind"),
+		Persistent:               githubcomtzafoncomputergo.Bool(true),
 		Stealth:                  map[string]any{},
 		TimeoutSeconds:           githubcomtzafoncomputergo.Int(0),
 	})
