@@ -503,7 +503,7 @@ func TestComputerKeyDownWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"id",
 		githubcomtzafoncomputergo.ComputerKeyDownParams{
-			Key:   githubcomtzafoncomputergo.String("key"),
+			Key:   githubcomtzafoncomputergo.String("shift"),
 			TabID: githubcomtzafoncomputergo.String("tab_id"),
 		},
 	)
@@ -533,7 +533,7 @@ func TestComputerKeyUpWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"id",
 		githubcomtzafoncomputergo.ComputerKeyUpParams{
-			Key:   githubcomtzafoncomputergo.String("key"),
+			Key:   githubcomtzafoncomputergo.String("shift"),
 			TabID: githubcomtzafoncomputergo.String("tab_id"),
 		},
 	)
