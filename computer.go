@@ -559,10 +559,12 @@ type ComputerNewParams struct {
 	// "browser" (default) or "desktop"
 	Kind param.Opt[string] `json:"kind,omitzero"`
 	// Persist cookies/storage state to DB on session teardown only if true
-	Persistent     param.Opt[bool]          `json:"persistent,omitzero"`
-	TimeoutSeconds param.Opt[int64]         `json:"timeout_seconds,omitzero"`
-	Display        ComputerNewParamsDisplay `json:"display,omitzero"`
-	Stealth        any                      `json:"stealth,omitzero"`
+	Persistent     param.Opt[bool]  `json:"persistent,omitzero"`
+	TimeoutSeconds param.Opt[int64] `json:"timeout_seconds,omitzero"`
+	// If true (browser sessions), use ADVANCED_PROXY_URL on session start
+	UseAdvancedProxy param.Opt[bool]          `json:"use_advanced_proxy,omitzero"`
+	Display          ComputerNewParamsDisplay `json:"display,omitzero"`
+	Stealth          any                      `json:"stealth,omitzero"`
 	paramObj
 }
 

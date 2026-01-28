@@ -40,6 +40,7 @@ func TestComputerNewWithOptionalParams(t *testing.T) {
 		Persistent:               githubcomtzafoncomputergo.Bool(true),
 		Stealth:                  map[string]any{},
 		TimeoutSeconds:           githubcomtzafoncomputergo.Int(0),
+		UseAdvancedProxy:         githubcomtzafoncomputergo.Bool(true),
 	})
 	if err != nil {
 		var apierr *githubcomtzafoncomputergo.Error
