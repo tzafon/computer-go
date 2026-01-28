@@ -34,10 +34,13 @@ func TestComputerNewWithOptionalParams(t *testing.T) {
 			Scale:  githubcomtzafoncomputergo.Float(0),
 			Width:  githubcomtzafoncomputergo.Int(0),
 		},
+		EnvironmentID:            githubcomtzafoncomputergo.String("environment_id"),
 		InactivityTimeoutSeconds: githubcomtzafoncomputergo.Int(0),
 		Kind:                     githubcomtzafoncomputergo.String("kind"),
+		Persistent:               githubcomtzafoncomputergo.Bool(true),
 		Stealth:                  map[string]any{},
 		TimeoutSeconds:           githubcomtzafoncomputergo.Int(0),
+		UseAdvancedProxy:         githubcomtzafoncomputergo.Bool(true),
 	})
 	if err != nil {
 		var apierr *githubcomtzafoncomputergo.Error
@@ -503,7 +506,7 @@ func TestComputerKeyDownWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"id",
 		githubcomtzafoncomputergo.ComputerKeyDownParams{
-			Key:   githubcomtzafoncomputergo.String("key"),
+			Key:   githubcomtzafoncomputergo.String("shift"),
 			TabID: githubcomtzafoncomputergo.String("tab_id"),
 		},
 	)
@@ -533,7 +536,7 @@ func TestComputerKeyUpWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"id",
 		githubcomtzafoncomputergo.ComputerKeyUpParams{
-			Key:   githubcomtzafoncomputergo.String("key"),
+			Key:   githubcomtzafoncomputergo.String("shift"),
 			TabID: githubcomtzafoncomputergo.String("tab_id"),
 		},
 	)
