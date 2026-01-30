@@ -34,10 +34,13 @@ func TestComputerNewWithOptionalParams(t *testing.T) {
 			Scale:  githubcomtzafoncomputergo.Float(0),
 			Width:  githubcomtzafoncomputergo.Int(0),
 		},
+		EnvironmentID:            githubcomtzafoncomputergo.String("environment_id"),
 		InactivityTimeoutSeconds: githubcomtzafoncomputergo.Int(0),
 		Kind:                     githubcomtzafoncomputergo.String("kind"),
+		Persistent:               githubcomtzafoncomputergo.Bool(true),
 		Stealth:                  map[string]any{},
 		TimeoutSeconds:           githubcomtzafoncomputergo.Int(0),
+		UseAdvancedProxy:         githubcomtzafoncomputergo.Bool(true),
 	})
 	if err != nil {
 		var apierr *githubcomtzafoncomputergo.Error
@@ -71,7 +74,7 @@ func TestComputerGet(t *testing.T) {
 	}
 }
 
-func TestComputerList(t *testing.T) {
+func TestComputerListWithOptionalParams(t *testing.T) {
 	t.Skip("Prism tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -84,7 +87,9 @@ func TestComputerList(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Computers.List(context.TODO())
+	_, err := client.Computers.List(context.TODO(), githubcomtzafoncomputergo.ComputerListParams{
+		Type: githubcomtzafoncomputergo.ComputerListParamsTypeLive,
+	})
 	if err != nil {
 		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
@@ -503,7 +508,7 @@ func TestComputerKeyDownWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"id",
 		githubcomtzafoncomputergo.ComputerKeyDownParams{
-			Key:   githubcomtzafoncomputergo.String("key"),
+			Key:   githubcomtzafoncomputergo.String("shift"),
 			TabID: githubcomtzafoncomputergo.String("tab_id"),
 		},
 	)
@@ -533,7 +538,7 @@ func TestComputerKeyUpWithOptionalParams(t *testing.T) {
 		context.TODO(),
 		"id",
 		githubcomtzafoncomputergo.ComputerKeyUpParams{
-			Key:   githubcomtzafoncomputergo.String("key"),
+			Key:   githubcomtzafoncomputergo.String("shift"),
 			TabID: githubcomtzafoncomputergo.String("tab_id"),
 		},
 	)

@@ -25,7 +25,7 @@ func TestUsage(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	t.Skip("Prism tests are disabled")
-	computerResponses, err := client.Computers.List(context.TODO())
+	computerResponses, err := client.Computers.List(context.TODO(), githubcomtzafoncomputergo.ComputerListParams{})
 	if err != nil {
 		t.Fatalf("err should be nil: %s", err.Error())
 	}

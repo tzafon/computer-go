@@ -7,9 +7,11 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/url"
 	"slices"
 
 	"github.com/tzafon/computer-go/internal/apijson"
+	"github.com/tzafon/computer-go/internal/apiquery"
 	"github.com/tzafon/computer-go/internal/requestconfig"
 	"github.com/tzafon/computer-go/option"
 	"github.com/tzafon/computer-go/packages/param"
@@ -63,11 +65,12 @@ func (r *ComputerService) Get(ctx context.Context, id string, opts ...option.Req
 	return
 }
 
-// List all active computers for the user's organization
-func (r *ComputerService) List(ctx context.Context, opts ...option.RequestOption) (res *[]ComputerResponse, err error) {
+// List all active computers for the user's organization. Use type=persistent to
+// list persistent sessions instead.
+func (r *ComputerService) List(ctx context.Context, query ComputerListParams, opts ...option.RequestOption) (res *[]ComputerResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	path := "computers"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
 	return
 }
 
@@ -214,8 +217,18 @@ func (r *ComputerService) KeepAlive(ctx context.Context, id string, opts ...opti
 	return
 }
 
-// Press and hold a keyboard key. Use with key_up for complex interactions.
-// Optionally specify tab_id (browser sessions only)
+// Press and hold a keyboard key. Use with key_up to release. Supports modifier
+// keys (shift, ctrl, alt, meta) for complex interactions like Shift+Click.
+//
+// **Supported keys:** Modifier keys (shift, ctrl, alt, meta), special keys (enter,
+// escape, tab, backspace, delete, space), arrow keys (arrowup, arrowdown,
+// arrowleft, arrowright), navigation (home, end, pageup, pagedown), function keys
+// (f1-f24), and any single character (a-z, 0-9).
+//
+// **Key names are case-insensitive:** "shift", "Shift", and "SHIFT" all work.
+//
+// **Example Shift+Click:** 1) key_down "shift", 2) click at coordinates, 3) key_up
+// "shift"
 func (r *ComputerService) KeyDown(ctx context.Context, id string, body ComputerKeyDownParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -227,8 +240,13 @@ func (r *ComputerService) KeyDown(ctx context.Context, id string, body ComputerK
 	return
 }
 
-// Release a keyboard key that was previously pressed with key_down. Optionally
-// specify tab_id (browser sessions only)
+// Release a keyboard key that was previously pressed with key_down. The key name
+// should match the corresponding key_down call.
+//
+// **Key names are case-insensitive:** "shift", "Shift", and "SHIFT" all work.
+//
+// **Important:** Always release modifier keys after use to prevent them from
+// affecting subsequent actions.
 func (r *ComputerService) KeyUp(ctx context.Context, id string, body ComputerKeyUpParams, opts ...option.RequestOption) (res *ActionResult, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
@@ -536,15 +554,20 @@ func (r *ComputerGetStatusResponse) UnmarshalJSON(data []byte) error {
 
 type ComputerNewParams struct {
 	// If true (default), kill session after inactivity
-	AutoKill  param.Opt[bool]   `json:"auto_kill,omitzero"`
-	ContextID param.Opt[string] `json:"context_id,omitzero"`
+	AutoKill      param.Opt[bool]   `json:"auto_kill,omitzero"`
+	ContextID     param.Opt[string] `json:"context_id,omitzero"`
+	EnvironmentID param.Opt[string] `json:"environment_id,omitzero"`
 	// Idle timeout before auto-kill
 	InactivityTimeoutSeconds param.Opt[int64] `json:"inactivity_timeout_seconds,omitzero"`
 	// "browser" (default) or "desktop"
-	Kind           param.Opt[string]        `json:"kind,omitzero"`
-	TimeoutSeconds param.Opt[int64]         `json:"timeout_seconds,omitzero"`
-	Display        ComputerNewParamsDisplay `json:"display,omitzero"`
-	Stealth        any                      `json:"stealth,omitzero"`
+	Kind param.Opt[string] `json:"kind,omitzero"`
+	// Persist cookies/storage state to DB on session teardown only if true
+	Persistent     param.Opt[bool]  `json:"persistent,omitzero"`
+	TimeoutSeconds param.Opt[int64] `json:"timeout_seconds,omitzero"`
+	// If true (browser sessions), use ADVANCED_PROXY_URL on session start
+	UseAdvancedProxy param.Opt[bool]          `json:"use_advanced_proxy,omitzero"`
+	Display          ComputerNewParamsDisplay `json:"display,omitzero"`
+	Stealth          any                      `json:"stealth,omitzero"`
 	paramObj
 }
 
@@ -570,6 +593,30 @@ func (r ComputerNewParamsDisplay) MarshalJSON() (data []byte, err error) {
 func (r *ComputerNewParamsDisplay) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
+
+type ComputerListParams struct {
+	// Session type filter
+	//
+	// Any of "live", "persistent".
+	Type ComputerListParamsType `query:"type,omitzero" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [ComputerListParams]'s query parameters as `url.Values`.
+func (r ComputerListParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatComma,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
+// Session type filter
+type ComputerListParamsType string
+
+const (
+	ComputerListParamsTypeLive       ComputerListParamsType = "live"
+	ComputerListParamsTypePersistent ComputerListParamsType = "persistent"
+)
 
 type ComputerCaptureScreenshotParams struct {
 	Base64 param.Opt[bool]   `json:"base64,omitzero"`
@@ -838,7 +885,9 @@ func (r *ComputerGetHTMLParams) UnmarshalJSON(data []byte) error {
 }
 
 type ComputerKeyDownParams struct {
-	Key   param.Opt[string] `json:"key,omitzero"`
+	// Key name to press. Case-insensitive. Examples: "shift", "ctrl", "a", "Enter"
+	Key param.Opt[string] `json:"key,omitzero"`
+	// Optional tab ID for browser sessions (ignored for desktop sessions)
 	TabID param.Opt[string] `json:"tab_id,omitzero"`
 	paramObj
 }
@@ -852,7 +901,9 @@ func (r *ComputerKeyDownParams) UnmarshalJSON(data []byte) error {
 }
 
 type ComputerKeyUpParams struct {
-	Key   param.Opt[string] `json:"key,omitzero"`
+	// Key name to release. Case-insensitive. Examples: "shift", "ctrl", "a", "Enter"
+	Key param.Opt[string] `json:"key,omitzero"`
+	// Optional tab ID for browser sessions (ignored for desktop sessions)
 	TabID param.Opt[string] `json:"tab_id,omitzero"`
 	paramObj
 }
