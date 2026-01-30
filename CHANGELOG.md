@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.3.0 (2026-01-30)
+
+Full Changelog: [v0.2.1...v0.3.0](https://github.com/tzafon/computer-go/compare/v0.2.1...v0.3.0)
+
+### Features
+
+* **api:** api update ([53900df](https://github.com/tzafon/computer-go/commit/53900dfa6f4dbc101812eb06202be3d5fe0d57d5))
+* **api:** api update ([9936a83](https://github.com/tzafon/computer-go/commit/9936a8362f306dd40320919cfe2fb2f50252e507))
+* **api:** api update ([28b1e76](https://github.com/tzafon/computer-go/commit/28b1e7636c8fafb71f8cf872b70f3329656a05e5))
+* **api:** api update ([fc5682a](https://github.com/tzafon/computer-go/commit/fc5682a11d166a3411f48cdd930a881c6cd61521))
+* **client:** add a convenient param.SetJSON helper ([d17d3d4](https://github.com/tzafon/computer-go/commit/d17d3d45b130079c1d008e032f37774183d4a382))
+
+
+### Bug Fixes
+
+* **docs:** fix mcp installation instructions for remote servers ([db76445](https://github.com/tzafon/computer-go/commit/db76445762b3198b60880f030724b7e444d38861))
+
 ## 0.2.1 (2026-01-18)
 
 Full Changelog: [v0.2.0...v0.2.1](https://github.com/tzafon/computer-go/compare/v0.2.0...v0.2.1)
