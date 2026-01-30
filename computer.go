@@ -7,9 +7,11 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/url"
 	"slices"
 
 	"github.com/tzafon/computer-go/internal/apijson"
+	"github.com/tzafon/computer-go/internal/apiquery"
 	"github.com/tzafon/computer-go/internal/requestconfig"
 	"github.com/tzafon/computer-go/option"
 	"github.com/tzafon/computer-go/packages/param"
@@ -63,11 +65,12 @@ func (r *ComputerService) Get(ctx context.Context, id string, opts ...option.Req
 	return
 }
 
-// List all active computers for the user's organization
-func (r *ComputerService) List(ctx context.Context, opts ...option.RequestOption) (res *[]ComputerResponse, err error) {
+// List all active computers for the user's organization. Use type=persistent to
+// list persistent sessions instead.
+func (r *ComputerService) List(ctx context.Context, query ComputerListParams, opts ...option.RequestOption) (res *[]ComputerResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
 	path := "computers"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, nil, &res, opts...)
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
 	return
 }
 
@@ -590,6 +593,30 @@ func (r ComputerNewParamsDisplay) MarshalJSON() (data []byte, err error) {
 func (r *ComputerNewParamsDisplay) UnmarshalJSON(data []byte) error {
 	return apijson.UnmarshalRoot(data, r)
 }
+
+type ComputerListParams struct {
+	// Session type filter
+	//
+	// Any of "live", "persistent".
+	Type ComputerListParamsType `query:"type,omitzero" json:"-"`
+	paramObj
+}
+
+// URLQuery serializes [ComputerListParams]'s query parameters as `url.Values`.
+func (r ComputerListParams) URLQuery() (v url.Values, err error) {
+	return apiquery.MarshalWithSettings(r, apiquery.QuerySettings{
+		ArrayFormat:  apiquery.ArrayQueryFormatComma,
+		NestedFormat: apiquery.NestedQueryFormatBrackets,
+	})
+}
+
+// Session type filter
+type ComputerListParamsType string
+
+const (
+	ComputerListParamsTypeLive       ComputerListParamsType = "live"
+	ComputerListParamsTypePersistent ComputerListParamsType = "persistent"
+)
 
 type ComputerCaptureScreenshotParams struct {
 	Base64 param.Opt[bool]   `json:"base64,omitzero"`
