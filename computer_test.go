@@ -74,7 +74,7 @@ func TestComputerGet(t *testing.T) {
 	}
 }
 
-func TestComputerList(t *testing.T) {
+func TestComputerListWithOptionalParams(t *testing.T) {
 	t.Skip("Prism tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
@@ -87,7 +87,9 @@ func TestComputerList(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Computers.List(context.TODO())
+	_, err := client.Computers.List(context.TODO(), githubcomtzafoncomputergo.ComputerListParams{
+		Type: githubcomtzafoncomputergo.ComputerListParamsTypeLive,
+	})
 	if err != nil {
 		var apierr *githubcomtzafoncomputergo.Error
 		if errors.As(err, &apierr) {
